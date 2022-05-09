@@ -8,6 +8,8 @@ class DualOptimModel(ExperimentModel):
     def _init_meters(self):
         super(DualOptimModel, self)._init_meters()
 
+        print('Im here! My Lipschitz constant is', self.model.config.model.l_constant)
+
     def loss(self, sample, test=False):
         # d1 stands for distribution 1.
         # d2 stands for distribution 2.

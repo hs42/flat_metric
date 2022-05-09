@@ -111,7 +111,7 @@ def save_2d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
                                                                                    config.model.activation,
                                                                                    epoch,
                                                                                    loss)
-                save_path = os.path.join(figures_dir, "epoch_{:04}_visualize_2d_".format(epoch) + fig_type +
+                save_path = os.path.join(figures_dir, "epoch_{}_visualize_2d_".format(epoch) + fig_type +
                                          "_elev_{}_azim{}".format(elev, azim) + ".png")
 
             plt.title(title_text, x=0.5, y=1.0)

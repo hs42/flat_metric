@@ -33,16 +33,18 @@ class Trainer(object):
             # On epoch start.
             self.hook('on_start_epoch', state)
 
-            # Loop over samples.
+            # Loop over samples each which contains 2xsample_size = 2*32 many data points (for distr1 and distr2).
             for sample in state['iterator']:
                 # On sample.
                 state['sample'] = sample
                 self.hook('on_sample', state)
-
+                
                 def closure():
-                    loss, output = state['model'].loss(state['sample'])
+                    loss, loss_contribs, output = state['model'].loss(state['sample'])
                     state['output'] = output
                     state['loss'] = loss
+                    state['loss_W'] = loss_contribs[0]
+                    state['loss_flat'] = loss_contribs[1]
                     loss.backward()
                     self.hook('on_forward', state)
                     # To free memory in save_for_backward,
@@ -87,9 +89,11 @@ class Trainer(object):
             self.hook('on_sample', state)
 
             def closure():
-                loss, output = state['model'].loss(state['sample'], test=True)
+                loss, loss_contribs, output = state['model'].loss(state['sample'], test=True)
                 state['output'] = output
                 state['loss'] = loss
+                state['loss_W'] = loss_contribs[0]
+                state['loss_flat'] = loss_contribs[1]
                 self.hook('on_forward', state)
                 # To free memory in save_for_backward.
                 # state['output'] = None

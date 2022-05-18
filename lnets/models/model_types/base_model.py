@@ -20,7 +20,7 @@ class ExperimentModel(nn.Module):
         return self.model.input_size
 
     def _init_meters(self):
-        self.meters = OrderedDict([('loss', tnt.meter.AverageValueMeter())])
+        self.meters = OrderedDict([('loss', tnt.meter.AverageValueMeter()), ('loss_W', tnt.meter.AverageValueMeter()), ('loss_flat', tnt.meter.AverageValueMeter())])
 
     def reset_meters(self):
         for meter in self.meters.values():

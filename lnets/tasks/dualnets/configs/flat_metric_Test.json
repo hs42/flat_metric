@@ -1,11 +1,11 @@
 {
-  "task": "wasserstein_distance_estimation",
-  "output_root": "out/wde",
-  "exp_name": "absolute_value_experiment",
+  "task": "FN",
+  "output_root": "out/testing",
+  "exp_name": "loss_logging",
   "seed": 0,
   "model": {
     "pretrained_best_path": null,
-    "name": "dual_fc",
+    "name": "dual_fc_flat",
     "activation": "maxmin",
     "linear": {
       "type": "bjorck",
@@ -29,6 +29,7 @@
       1
     ],
     "l_constant": 1,
+    "upper_bound": 2,
 
     "per_epoch_proj": {
       "turned_on": false,
@@ -60,8 +61,8 @@
       ],
       "last_epoch": -1
     },
-    "epoch_len": 16,
-    "epochs": 225,
+    "epoch_len": 1,
+    "epochs": 5,
     "momentum": 0.9,
     "betas": [
       0.0,
@@ -79,12 +80,12 @@
   "distrib1": {
     "name": "MultiSphericalShell",
     "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 5,
+    "dim": 1,
     "empty_dim": 0,
     "num_shells": 1,
     "radius": 0.0000001,
     "center_x": [
-      0.0, 0.0
+      0.0
     ],
     "reshape_to_grid": false,
     "sample_size": 32,
@@ -93,12 +94,12 @@
   "distrib2": {
     "name": "MultiSphericalShell",
     "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 5,
+    "dim": 1,
     "empty_dim": 0,
     "num_shells": 1,
-    "radius": 10,
+    "radius": 1,
     "center_x": [
-      0.0, 0.0
+      0.0
     ],
     "reshape_to_grid": false,
     "sample_size": 32,
@@ -133,10 +134,13 @@
     ],
     "step": 0.02
   },
+  "visualize_losses": {
+    "dummy": true
+  },
   "logging": {
     "report_freq": 1,
     "save_model": false,
-    "save_best": false
+    "save_best": true
   },
   "cuda": false,
   "visualize": true

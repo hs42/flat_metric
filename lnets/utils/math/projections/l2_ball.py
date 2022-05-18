@@ -67,7 +67,6 @@ def bjorck_orthonormalize(w, beta=0.5, iters=20, order=1):
 def get_safe_bjorck_scaling(weight, cuda=True):
     bjorck_scaling = torch.tensor([np.sqrt(weight.shape[0] * weight.shape[1])]).float()
     bjorck_scaling = to_cuda(bjorck_scaling, cuda=cuda)
-
     return bjorck_scaling
 
 

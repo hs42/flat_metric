@@ -6,7 +6,7 @@
   "model": {
     "pretrained_best_path": null,
     "name": "dual_fc",
-    "activation": "maxmin",
+    "activation": "group_sort",
     "linear": {
       "type": "bjorck",
       "safe_scaling": true,
@@ -22,15 +22,15 @@
       1
     ],
     "groupings": [
-      2,
-      2,
+      4,
+      16,
       1
     ],
     "l_constant": 1,
 
     "per_epoch_proj": {
       "turned_on": false,
-      "every_n_epochs": 100000000,
+      "every_n_epochs": 10000000,
       "type": "l_2",
       "bjorck_beta": 0.5,
       "bjorck_iter": 20,
@@ -77,7 +77,7 @@
   "distrib1": {
     "name": "Gauss",
     "filepath": "lnets/tasks/dualnets/distrib/Gauss.py",
-    "dim": 3,
+    "dim": 1,
     "sigma": 1,
     "mu":-1,
     "sample_size": 32,
@@ -86,7 +86,7 @@
   "distrib2": {
     "name": "Gauss",
     "filepath": "lnets/tasks/dualnets/distrib/Gauss.py",
-    "dim": 3,
+    "dim": 1,
     "sigma": 1,
     "mu": 1,
     "sample_size": 32,

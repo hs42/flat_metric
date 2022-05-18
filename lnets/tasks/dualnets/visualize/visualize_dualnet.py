@@ -131,7 +131,7 @@ def save_1d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
                                                                                config.model.activation,
                                                                                epoch,
                                                                                loss)
-        save_path = os.path.join(figures_dir, "epoch_{:04}_visualize_1d_".format(epoch))
+        save_path = os.path.join(figures_dir, "epoch_{}_visualize_1d_".format(epoch))
 
     plt.title(title_text, x=0.5, y=1.0)
     plt.tight_layout()

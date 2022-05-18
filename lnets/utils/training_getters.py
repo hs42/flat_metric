@@ -75,7 +75,7 @@ def get_optimizer_repr(config):
     return "{}_{}".format(config.optim.optimizer, config.optim.lr_schedule.lr_init)
 
 
-def get_experiment_name(config):
+def get_experiment_name(config, verbose=True):
     now = datetime.datetime.now()
 
     base_exp_name = config.exp_name
@@ -97,11 +97,15 @@ def get_experiment_name(config):
 
     exp_name = "{}_{}_{}_{}_{}_{}".format(task_name, base_exp_name, data_name, optim_name, model_name,
                                           now.strftime("%Y_%m_%d_%H_%M_%S_%f"))
+
+    if not verbose:
+        exp_name = "{}".format(now.strftime("%Y_%m_%d_%H_%M_%S_%f"))                        
+
     return exp_name
 
 
 def get_training_dirs(config):
-    exp_dir = os.path.join(config.output_root, get_experiment_name(config))
+    exp_dir = os.path.join(config.output_root, get_experiment_name(config, verbose=False))
     log_dir = os.path.join(exp_dir, 'logs')
     model_dir = os.path.join(exp_dir, 'checkpoints')
     figures_dir = os.path.join(exp_dir, 'figures')

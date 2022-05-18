@@ -28,6 +28,13 @@ def load_fc_dual(config):
                   bias=config.model.linear.bias, config=config)
     return DualOptimModel(model)
 
+# Flat norm estimation
+@register_model('dual_fc_flat')
+def load_fc_dual(config):
+    model = FCNet(config.model.layers, config.distrib1.dim, config.model.linear.type, config.model.activation,
+                  bias=config.model.linear.bias, config=config)
+    return DualOptimModel_flat_norm(model)
+
 
 @register_model("dual_fully_conv")
 def load_conv_dual(config):

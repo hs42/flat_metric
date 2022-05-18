@@ -2,6 +2,7 @@ from functools import partial
 from tqdm import tqdm
 
 #mpl.use('Agg')
+import numpy as np
 import matplotlib.pyplot as plt
 plt.interactive(False)
 
@@ -98,6 +99,8 @@ def train_dualnet(model, loaders, config):
         scheduler.step()
 
         print("\t\t\tTraining loss: {:.4f}".format(state['model'].meters['loss'].value()[0]))
+        #type(state['model'].meters['loss']) is torchnet.meter.averagevaluemeter.AverageValueMeter -> builds average automatically
+
         logger.log_meters('train', state)
 
         if state['epoch'] % config.logging.report_freq == 0:
@@ -140,6 +143,22 @@ def train_dualnet(model, loaders, config):
     singulars['mean_singulars'] = training_state['mean_singular']
     singulars['min_singulars'] = training_state['min_singular']
     singulars['singulars'] = training_state['singulars']
+
+    #Visualize loss terms
+    if config.visualize_losses:
+        print('Plotting loss terms ...')
+        loss_W = np.loadtxt(os.path.join(dirs.log_dir, "train_loss_W.log"), skiprows=1, delimiter=',')
+        loss_f = np.loadtxt(os.path.join(dirs.log_dir, "train_loss_flat.log"), skiprows=1, delimiter=',')
+        
+        plt.plot(loss_W[:,0], loss_W[:,1], label='Wasserstein loss')
+        plt.plot(loss_W[:,0], loss_f[:,1], label='bound loss')
+        plt.plot(loss_W[:,0], loss_f[:,1]+loss_W[:,1], label='loss')
+        plt.title('Training losses')
+        plt.legend()
+        plt.savefig(os.path.join(dirs.figures_dir, 'Training_losses.png'), format='PNG')
+
+
+
 
     import pickle
     pickle.dump(singulars, open(os.path.join(dirs.log_dir, "singular_vals_dict.pkl"), "wb"))

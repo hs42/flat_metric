@@ -2,4 +2,4 @@ from lnets.models.model_types.base_model import ExperimentModel
 from lnets.models.model_types.classification_model import ClassificationModel, HingeLossClassificationModel
 from lnets.models.model_types.classification_model import JacSpecClassificationModel
 from lnets.models.model_types.classification_model import MarginClassificationModel
-from lnets.models.model_types.dual_optim_model import DualOptimModel
+from lnets.models.model_types.dual_optim_model import *

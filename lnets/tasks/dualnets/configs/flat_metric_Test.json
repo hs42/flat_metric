@@ -19,17 +19,15 @@
     "layers": [
       128,
       128,
-      128,
       1
     ],
     "groupings": [
       2,
       2,
-      2,
       1
     ],
     "l_constant": 1,
-    "upper_bound": 2,
+    "upper_bound": 0.2,
 
     "per_epoch_proj": {
       "turned_on": false,
@@ -61,8 +59,8 @@
       ],
       "last_epoch": -1
     },
-    "epoch_len": 1,
     "epochs": 5,
+    "epoch_len": 16,
     "momentum": 0.9,
     "betas": [
       0.0,

@@ -24,7 +24,7 @@ class DualOptimModel(ExperimentModel):
 
         loss = -1 * (torch.mean(potentials_from_d1) - torch.mean(potentials_from_d2))
 
-        return loss, (potentials_from_d1, potentials_from_d2)
+        return [loss], (potentials_from_d1, potentials_from_d2)
 
     def add_to_meters(self, state):
         self.meters['loss'].add(state['loss'].item())
@@ -62,7 +62,7 @@ class DualOptimModel_flat_norm(ExperimentModel):
         #if(loss_flat > 0):
         #    print('Nicht verschwindender flat loss:', loss_flat)
 
-        return loss, (loss_W, loss_flat), (potentials_from_d1, potentials_from_d2)
+        return [loss, loss_W, loss_flat], (potentials_from_d1, potentials_from_d2)
 
     def add_to_meters(self, state):
         self.meters['loss'].add(state['loss'].item())

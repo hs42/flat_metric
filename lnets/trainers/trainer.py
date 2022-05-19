@@ -40,11 +40,13 @@ class Trainer(object):
                 self.hook('on_sample', state)
                 
                 def closure():
-                    loss, loss_contribs, output = state['model'].loss(state['sample'])
+                    losses, output = state['model'].loss(state['sample'])
+                    loss = losses[0]
                     state['output'] = output
                     state['loss'] = loss
-                    state['loss_W'] = loss_contribs[0]
-                    state['loss_flat'] = loss_contribs[1]
+                    if(len(losses) > 1):
+                        state['loss_W'] = losses[1]
+                        state['loss_flat'] = losses[2]
                     loss.backward()
                     self.hook('on_forward', state)
                     # To free memory in save_for_backward,
@@ -89,11 +91,13 @@ class Trainer(object):
             self.hook('on_sample', state)
 
             def closure():
-                loss, loss_contribs, output = state['model'].loss(state['sample'], test=True)
+                losses, output = state['model'].loss(state['sample'], test=True)
+                loss = losses[0]
                 state['output'] = output
                 state['loss'] = loss
-                state['loss_W'] = loss_contribs[0]
-                state['loss_flat'] = loss_contribs[1]
+                if(len(losses) > 1):
+                    state['loss_W'] = losses[1]
+                    state['loss_flat'] = losses[2]
                 self.hook('on_forward', state)
                 # To free memory in save_for_backward.
                 # state['output'] = None

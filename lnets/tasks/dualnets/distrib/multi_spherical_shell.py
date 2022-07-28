@@ -6,7 +6,7 @@ from lnets.tasks.dualnets.distrib.base_distrib import BaseDistrib
 class MultiSphericalShell(BaseDistrib):
     def __init__(self, config):
         super(MultiSphericalShell, self).__init__(config)
-
+        print(config)
         self.dim = config.dim
         self.empty_dim = config.empty_dim
 

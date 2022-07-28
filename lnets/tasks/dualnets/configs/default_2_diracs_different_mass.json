@@ -1,7 +1,7 @@
 {
-  "task": "FN",
-  "output_root": "out/spectral",
-  "exp_name": "unconstrained",
+  "task": "flat norm dirac less than 2",
+  "output_root": "out/Diracs_different_mass",
+  "exp_name": "ohne / len(term_flat_i)",
   "seed": 0,
   "model": {
     "pretrained_best_path": null,
@@ -27,7 +27,15 @@
       1
     ],
     "l_constant": 1,
-    "upper_bound":5,
+    "bound" : {
+      "upper_bound":1,
+      "lambda_loss_start_at": 0.2,
+      "lambda_loss_stop_at": 0.5,
+      "lambda_init": 10.0,
+      "lambda_final": 10.0,
+      "lambda_coefficient": 2.0,
+      "lambda_current": 10.0
+    },
 
     "per_epoch_proj": {
       "turned_on": false,
@@ -59,8 +67,8 @@
       ],
       "last_epoch": -1
     },
-    "epochs": 30,
-    "epoch_len": 16,
+    "epochs": 2000,
+    "epoch_len":4,
     "momentum": 0.9,
     "betas": [
       0.0,
@@ -78,30 +86,29 @@
   "distrib1": {
     "name": "MultiSphericalShell",
     "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 1,
-    "empty_dim": 0,
-    "num_shells": 1,
-    "radius": 0.0000001,
+    "dim": 3,
+    "radius": 0.00001,
     "center_x": [
       0.0
     ],
+    "sample_size": 10,
+    "test_sample_size": 1,
     "reshape_to_grid": false,
-    "sample_size": 32,
-    "test_sample_size": 2048
+    "empty_dim": 0
+
   },
   "distrib2": {
     "name": "MultiSphericalShell",
     "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 1,
-    "empty_dim": 0,
-    "num_shells": 1,
-    "radius": 1,
+    "dim": 3,
+    "radius": 0.1,
     "center_x": [
       0.0
     ],
+    "sample_size": 160,
+    "test_sample_size": 1,
     "reshape_to_grid": false,
-    "sample_size": 32,
-    "test_sample_size": 2048
+    "empty_dim": 0
   },
   "visualize_2d": {
     "xrange": [
@@ -144,5 +151,5 @@
     "check_orthogonality": true
   },
   "cuda": false,
-  "visualize": true
+  "visualize": false
 }

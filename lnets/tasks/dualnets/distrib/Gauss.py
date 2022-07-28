@@ -15,6 +15,7 @@ class Gauss(BaseDistrib):
         assert self.sigma > 0, "Standard deviation must be strictly larger than 0. "
 
     def __call__(self, size):
+        print('sigma: ', self.sigma)
         samples = np.random.multivariate_normal(mean=self.mu * np.ones(shape=self.dim), cov=self.sigma**2 * np.eye(self.dim),
                                                     size=size)
             

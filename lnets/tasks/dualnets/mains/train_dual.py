@@ -16,6 +16,7 @@ from lnets.utils.seeding import set_experiment_seed
 from lnets.utils.misc import *
 from lnets.utils.training_getters import get_training_dirs
 from lnets.tasks.dualnets.visualize.visualize_dualnet import *
+from lnets.data.load_data_custom import *
 
 
 def train_dualnet(model, loaders, config):
@@ -42,6 +43,14 @@ def train_dualnet(model, loaders, config):
     logger = Logger(dirs.log_dir)
     logger.log_config(config)
 
+    # init check_orthogonality log. It would be more elegant to use the logger handle
+    if config.logging.check_orthogonality:
+        with open(os.path.join(dirs.log_dir, "weight_orthogonality.log"), mode='a', newline='') as log_orth:
+                log_orth.write('Epoch, ||A^TA - I||/||A^TA|| for each weight matrix\n')
+
+    with open(os.path.join(dirs.log_dir, "lambda.log"), mode='a', newline='') as lambdalog:
+        lambdalog.write('Current lambda \t Current actual bound penalty ' + '\n')   
+
     # Instantiate the trainer.
     trainer = Trainer()
 
@@ -55,12 +64,13 @@ def train_dualnet(model, loaders, config):
 
     def on_forward(state):
         state['model'].add_to_meters(state)
-
         # Clip gradients.
         torch.nn.utils.clip_grad_norm_(state['model'].parameters(), config.optim.max_grad_norm)
 
         # Save the most recent loss.
         state['recent_losses'].append(state['loss'].item())
+
+        
 
     def on_update(state):
         if config.model.per_update_proj.turned_on:
@@ -74,7 +84,7 @@ def train_dualnet(model, loaders, config):
         state["max_singular"] = list()
         state["mean_singular"] = list()
         state["min_singular"] = list()
-        state["singulars"] = list()
+        state["singulars"] = list()    
 
     def on_start_val(state):
         # Initialize a list that is to store all of the losses encountered in the recent epoch.
@@ -99,7 +109,15 @@ def train_dualnet(model, loaders, config):
         scheduler.step()
 
         print("\t\t\tTraining loss: {:.4f}".format(state['model'].meters['loss'].value()[0]))
+        print("\t\t\tDistance estimate: {:.4f}".format( - state['model'].meters['loss_W'].value()[0]))
         #type(state['model'].meters['loss']) is torchnet.meter.averagevaluemeter.AverageValueMeter -> builds average automatically
+
+        #save most recent distance estimate, if it exists on its own#
+        if('loss_W' in state):
+            state['recent_d_estimate'].append( - state['model'].meters['loss_W'].value()[0])
+
+        #update lambda for bound loss
+        state['model'].update_lambda_bound(state)
 
         logger.log_meters('train', state)
 
@@ -116,6 +134,30 @@ def train_dualnet(model, loaders, config):
         if config.logging.save_best:
             hook_state['best_val'], new_best = save_best_model_and_optimizer(state, hook_state['best_val'],
                                                                              dirs.best_path, config)
+
+        # Calcualte and log the actual orthogonality of the weight matrices
+        if config.logging.check_orthogonality:
+            with open(os.path.join(dirs.log_dir, "weight_orthogonality.log"), mode='a', newline='') as log_orth:
+                        log_orth.write(str(state['epoch']) + '\t')   
+
+            for name, param in model.named_parameters():
+                if "weight" in name:
+                    tmp = torch.matmul(param.T, param)
+                    error = tmp - torch.eye(tmp.size()[0])# = ||W^T W - Id||
+
+                    with open(os.path.join(dirs.log_dir, "weight_orthogonality.log"), mode='a', newline='') as log_orth:
+                        log_orth.write(str(torch.linalg.norm(error).item() / torch.linalg.norm(tmp).item()) + "\t")    #relative error
+                                                                               
+            with open(os.path.join(dirs.log_dir, "weight_orthogonality.log"), mode='a', newline='') as log_orth:
+                log_orth.write('\n')    
+
+
+        with open(os.path.join(dirs.log_dir, "lambda.log"), mode='a', newline='') as lambdalog:
+            current_lambda = config.model.bound.lambda_current
+            #print('current lambda: ', current_lambda)
+            current_actual_penalty = state['model'].meters['loss_flat'].value()[0] / current_lambda
+
+            lambdalog.write(str(current_lambda) + '\t' + str(current_actual_penalty) + '\n')   
 
         # Validate the model.
         if loaders['validation'] is not None:
@@ -145,17 +187,33 @@ def train_dualnet(model, loaders, config):
     singulars['singulars'] = training_state['singulars']
 
     #Visualize loss terms
-    if config.visualize_losses:
+    if config.visualize_logs.losses:
         print('Plotting loss terms ...')
         loss_W = np.loadtxt(os.path.join(dirs.log_dir, "train_loss_W.log"), skiprows=1, delimiter=',')
         loss_f = np.loadtxt(os.path.join(dirs.log_dir, "train_loss_flat.log"), skiprows=1, delimiter=',')
-        
+        plt.figure()
+
         plt.plot(loss_W[:,0], loss_W[:,1], label='Wasserstein loss')
-        plt.plot(loss_W[:,0], loss_f[:,1], label='bound loss')
-        plt.plot(loss_W[:,0], loss_f[:,1]+loss_W[:,1], label='loss')
+        plt.plot(loss_W[10:,0], loss_f[10:,1], label='bound loss')
+        plt.plot(loss_W[10:,0], loss_f[10:,1]+loss_W[10:,1], label='loss')
         plt.title('Training losses')
         plt.legend()
         plt.savefig(os.path.join(dirs.figures_dir, 'Training_losses.png'), format='PNG')
+        
+    #Visualize weight orthogonality scores 
+    if config.visualize_logs.weight_orthognality:
+        print('Plotting weight orthogonality scores ...')
+        scores = np.loadtxt(os.path.join(dirs.log_dir, "weight_orthogonality.log"), skiprows=1)
+        n_matrices = scores.shape[1] - 1
+        
+        plt.figure()
+
+        for i in range(n_matrices):
+            plt.plot(scores[:,0], scores[:,i+1], label='Score for {a} weight matrix'.format(a=str(i+1)+'th'))
+        plt.title('Relative orthognality scores ' + '$||W^TW - Id||_F/||W^TW||_F$')
+        plt.legend()
+        plt.ylim(config.visualize_logs.weight_orthognality_yrange)
+        plt.savefig(os.path.join(dirs.figures_dir, 'orthognality_scores.png'), format='PNG')
 
 
 
@@ -173,8 +231,9 @@ def train_dualnet(model, loaders, config):
         test_state = trainer.test(model, loaders['test'])
         logger.log_meters('test', test_state)
     else:
-        raise RuntimeError("The trained models must be tested with a testing distribution. ")
-
+        print("Attention: the trained models should be tested with a testing distribution/dataset.")
+        print('Will continue, but return a None object as final_state')
+        test_state = None
     # Visualize the learned critic landscape.
     if config.visualize:
         save_1_or_2_dim_dualnet_visualizations(model, dirs.figures_dir, config,
@@ -189,7 +248,8 @@ if __name__ == '__main__':
     cfg = process_config()
     dual_model = get_model(cfg)
     print(dual_model)
-    distrib_loaders = load_distrib(cfg)
+    #distrib_loaders = load_distrib(cfg)
+    data_loaders = load_data(cfg)
 
     # Train.
-    final_state = train_dualnet(dual_model, distrib_loaders, cfg)
+    final_state = train_dualnet(dual_model, data_loaders, cfg)

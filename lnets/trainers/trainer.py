@@ -2,6 +2,7 @@
 Based on code from https://github.com/pytorch/tnt/blob/master/torchnet/trainers/trainers.py
 """
 
+import torch
 
 class Trainer(object):
     def __init__(self):
@@ -21,18 +22,20 @@ class Trainer(object):
             'epoch': 0,
             't': 0,
             'train': True,
-            'stop': False
+            'stop': False,
+            'recent_d_estimate': []
         }
 
         # On training start.
         model.train()  # Switch to training mode.
         self.hook('on_start', state)
 
+        scheduler = torch.optim.lr_scheduler.StepLR(state['optimizer'], step_size=500, gamma=0.9)
+
         # Loop over epochs.
         while state['epoch'] < state['maxepoch'] and not state['stop']:
             # On epoch start.
             self.hook('on_start_epoch', state)
-
             # Loop over samples each which contains 2xsample_size = 2*32 many data points (for distr1 and distr2).
             for sample in state['iterator']:
                 # On sample.
@@ -43,10 +46,13 @@ class Trainer(object):
                     losses, output = state['model'].loss(state['sample'])
                     loss = losses[0]
                     state['output'] = output
+                    #print('Output der beiden distr: ', output)
                     state['loss'] = loss
                     if(len(losses) > 1):
                         state['loss_W'] = losses[1]
                         state['loss_flat'] = losses[2]
+
+
                     loss.backward()
                     self.hook('on_forward', state)
                     # To free memory in save_for_backward,
@@ -57,6 +63,7 @@ class Trainer(object):
                 # On update.
                 state['optimizer'].zero_grad()
                 state['optimizer'].step(closure)
+                #scheduler.step()
                 self.hook('on_update', state)
 
                 state['t'] += 1
@@ -77,6 +84,8 @@ class Trainer(object):
             'iterator': iterator,
             't': 0,
             'train': False,
+            'recent_d_estimate': []
+
         }
         model.eval()  # Set the PyTorch model to evaluation mode.
 
@@ -98,6 +107,8 @@ class Trainer(object):
                 if(len(losses) > 1):
                     state['loss_W'] = losses[1]
                     state['loss_flat'] = losses[2]
+
+
                 self.hook('on_forward', state)
                 # To free memory in save_for_backward.
                 # state['output'] = None

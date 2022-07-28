@@ -97,8 +97,19 @@ class SingleCellClusters(BaseDistrib):
         return arbitrarily many samples with finite data. 
         '''
 
+
         idx = np.random.randint(0, len(self.samples), size)
         #print('Laenge der Liste der idx: ', len(idx))
-        samples = np.array(self.samples)[idx]
-
+        
+        #samples = np.array(self.samples)[idx]
+        
+        samples = np.random.permutation(np.array(self.samples))
+        
+        """
+        if self.cluster == 'TAP':
+            samples = np.loadtxt('data/samples1')
+        elif self.cluster == 'NB':
+            samples = np.loadtxt('data/samples2')
+        """
+        
         return samples

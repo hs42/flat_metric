@@ -28,3 +28,6 @@ class ExperimentModel(nn.Module):
 
     def add_to_meters(self, state):
         self.meters['loss'].add(state['loss'].data[0])
+
+    def update_lambda_bound(self, state):
+        return 

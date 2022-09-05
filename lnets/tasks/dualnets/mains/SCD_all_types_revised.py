@@ -206,4 +206,6 @@ for type1 in ["Group1"]:#cell_types:
 results_table = results.pivot_table(index=['cell type 1'], columns=['cell type 2'], values='{a} distance'.format(a='flat' if flat else 'Wassertein'))
 print(results_table)
 
-results.to_pickle(os.path.join(out_path, 'results_comparison_{a}'.format(a='flat' if flat else 'Wassertein')))
+#Saving to a pickled file gives a error when reading for some reason
+#results.to_pickle(os.path.join(out_path, 'results_comparison_{a}'.format(a='flat' if flat else 'Wassertein')))
+results.to_csv(os.path.join(out_path, 'results_comparison_{a}.csv'.format(a='flat' if flat else 'Wassertein')))

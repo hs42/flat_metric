@@ -154,7 +154,8 @@ def train_dualnet(model, loaders, config):
 
         with open(os.path.join(dirs.log_dir, "lambda.log"), mode='a', newline='') as lambdalog:
             current_lambda = config.model.bound.lambda_current
-            #print('current lambda: ', current_lambda)
+            if current_lambda == 0:
+                current_lambda = 1 #do nothing, thus avoid divide by zero error
             current_actual_penalty = state['model'].meters['loss_flat'].value()[0] / current_lambda
 
             lambdalog.write(str(current_lambda) + '\t' + str(current_actual_penalty) + '\n')   
@@ -224,7 +225,7 @@ def train_dualnet(model, loaders, config):
     # Pick the best model according to validation score and test it.
     model.reset_meters()
     best_model_path = os.path.join(dirs.best_path, "best_model.pt")
-    if os.path.exists(dirs.best_path):
+    if os.path.exists(best_model_path):
         model.load_state_dict(torch.load(best_model_path))
     if loaders['test'] is not None:
         print("Testing best model. ")

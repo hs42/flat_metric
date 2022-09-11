@@ -249,8 +249,14 @@ if __name__ == '__main__':
     cfg = process_config()
     dual_model = get_model(cfg)
     print(dual_model)
-    #distrib_loaders = load_distrib(cfg)
-    data_loaders = load_data(cfg)
+
+    #decide whether to load data (invoke load_data) or distribustions (invoke load_distrib)
+    #according to whether the key "path_train" is found in the config .json file
+    if "path_train" in cfg.distrib1:
+        loaders = load_data(cfg)
+    else:
+        loaders = load_distrib(cfg)
+    
 
     # Train.
-    final_state = train_dualnet(dual_model, data_loaders, cfg)
+    final_state = train_dualnet(dual_model, loaders, cfg)

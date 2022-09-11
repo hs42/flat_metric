@@ -19,7 +19,7 @@ linear_layer_type = 'spectral_normal'
 
 path_to_default =      './lnets/tasks/dualnets/configs/default_2_diracs.json'
 config_To_be_written = './lnets/tasks/dualnets/configs/2_diracs.json'
-out_path = './out/examine_loss_and_errors/FM_2_Diracs_d={d}_few_samples'.format(d=dim)
+out_path = './out/examine_loss_and_errors/just_a_simple_test'.format(d=dim)
 
 #read data
 with open(path_to_default) as f:

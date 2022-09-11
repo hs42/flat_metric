@@ -5,7 +5,7 @@ import json
 
 dim = 2
 
-path = './examine_loss_and_errors/out/FM_2_Diracs_d={d}_many_samples'.format(d=dim)
+path = './out/examine_loss_and_errors/just_a_simple_test'
 
 dirs = os.listdir(path)
 r = np.zeros(len(dirs))

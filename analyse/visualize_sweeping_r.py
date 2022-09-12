@@ -5,7 +5,7 @@ import json
 
 dim = 2
 
-path = './out/examine_loss_and_errors/just_a_simple_test'
+path = 'out{s}examine_loss_and_errors{s}just_a_simple_test'.format(s=os.sep)
 
 dirs = os.listdir(path)
 r = np.zeros(len(dirs))
@@ -14,12 +14,12 @@ flat_metric = np.zeros((len(dirs),2))
 
 
 for i, dir in enumerate(dirs):
-    with open(os.path.join(path, dir, 'logs/config.json')) as f:
+    with open(os.path.join(path, dir, 'logs{s}config.json'.format(s=os.sep))) as f:
         data = json.load(f)
     r[i] = abs(data['distrib2']['radius'] - data['distrib1']['radius'])
     dim = data['distrib2']['dim']
     linear_type = data['model']['linear']['type']
-    distance_train = np.loadtxt(os.path.join(path, dir, 'logs/train_loss_W.log'), skiprows=1, delimiter=',')
+    distance_train = np.loadtxt(os.path.join(path, dir, 'logs{s}train_loss_W.log'.format(s=os.sep)), skiprows=1, delimiter=',')
     flat_metric[i,0] = -np.mean(distance_train[:-10:-1,1]) #mean of last 10 entries
     flat_metric[i,1] = np.std(distance_train[:-10:-1,1]) #mean of last 10 entries
 

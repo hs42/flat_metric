@@ -18,7 +18,7 @@ radii_to_test = [0.1, 0.5, 1.0, 1.5] + list(range(2,47,5)) #list concatenation
 
 linear_layer_type = 'spectral_normal'
 
-path_to_default =      '{s}lnets{s}tasks{s}dualnets{s}configs{s}default_2_diracs.json'.format(s=os.sep)
+path_to_default =      'lnets{s}tasks{s}dualnets{s}configs{s}default_2_diracs.json'.format(s=os.sep)
 config_To_be_written = 'lnets{s}tasks{s}dualnets{s}configs{s}2_diracs.json'.format(s=os.sep)
 out_path = 'out{s}examine_loss_and_errors{s}just_a_simple_test'.format(s=os.sep)
 

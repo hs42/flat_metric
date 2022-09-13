@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import subprocess
+import os
 
 '''
 quick / most important parameters

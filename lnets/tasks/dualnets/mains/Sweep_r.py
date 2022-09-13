@@ -60,6 +60,6 @@ for r in radii_to_test:
         json.dump(data, write_file)
 
     #compute flat metric
-    subprocess.call("python lnets{s}tasks{s}dualnets{s}mains{s}train_dual.py " + config_To_be_written, shell=True)
+    subprocess.call("python lnets{s}tasks{s}dualnets{s}mains{s}train_dual.py ".format(s=os.sep) + config_To_be_written, shell=True)
 
 

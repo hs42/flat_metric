@@ -6,7 +6,7 @@ import json
 
 dim = 2
 
-path = './out/examine_loss_and_errors/FM_2_Diracs_d={d}_{b}'.format(d=dim, b='few_samples') 
+path = './out/examine_loss_and_errors/test_11-09-FM_2_Diracs_d=2_few_samples' 
 
 dirs = os.listdir(path)
 dirs.sort()

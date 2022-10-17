@@ -202,7 +202,7 @@ def train_dualnet(model, loaders, config):
         plt.savefig(os.path.join(dirs.figures_dir, 'Training_losses.png'), format='PNG')
         
     #Visualize weight orthogonality scores 
-    if config.visualize_logs.weight_orthognality:
+    if config.visualize_logs.weight_orthognality and config.logging.check_orthogonality:
         print('Plotting weight orthogonality scores ...')
         scores = np.loadtxt(os.path.join(dirs.log_dir, "weight_orthogonality.log"), skiprows=1)
         n_matrices = scores.shape[1] - 1

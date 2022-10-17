@@ -1,5 +1,5 @@
 import numpy as np
-
+import os
 from lnets.tasks.dualnets.distrib.base_distrib import BaseDistrib
 
 
@@ -15,6 +15,6 @@ class load_sum_of_Diracs(BaseDistrib):
 
     def __call__(self, size):
         
-        samples = np.loadtxt('lnets/tasks/dualnets/distrib/sample_points_sum_of_Diracs')
+        samples = np.loadtxt('lnets{s}tasks{s}dualnets{s}distrib{s}sample_points_sum_of_Diracs'.format(s=os.sep))
             
         return samples

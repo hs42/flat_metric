@@ -30,7 +30,6 @@ class Trainer(object):
         model.train()  # Switch to training mode.
         self.hook('on_start', state)
 
-        scheduler = torch.optim.lr_scheduler.StepLR(state['optimizer'], step_size=500, gamma=0.9)
 
         # Loop over epochs.
         while state['epoch'] < state['maxepoch'] and not state['stop']:
@@ -63,7 +62,7 @@ class Trainer(object):
                 # On update.
                 state['optimizer'].zero_grad()
                 state['optimizer'].step(closure)
-                #scheduler.step()
+
                 self.hook('on_update', state)
 
                 state['t'] += 1

@@ -128,8 +128,9 @@ out_path = "out/3_splatter_test_data_untersch_Anzahl"
 """
 loading and preprocessing
 """
-if not os.path.isdir(path_to_save_processed):
-    os.makedirs(path_to_save_processed)
+if os.path.isdir(path_to_save_processed): #reset
+    os.system("rm -rf" + path_to_save_processed)
+os.makedirs(path_to_save_processed)
 
 # if out_path already exists from a previous experiment
 if os.path.isdir(out_path):

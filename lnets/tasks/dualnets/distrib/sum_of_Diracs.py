@@ -48,4 +48,4 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         term2 = np.abs(self.l - size_other_distr)
         term3 = self.m - self.l
 
-        return term1 + term2 + term3 #to be normalized by min(n,m) -> makes a-posteriori correction in visualizing script unnecessary
+        return (term1 + term2 + term3) / min(size_other_distr, self.m) #to make comparable with our estimate which normalizes by min(n,m)

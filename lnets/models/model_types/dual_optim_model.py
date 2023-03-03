@@ -66,26 +66,22 @@ class DualOptimModel_flat_norm(ExperimentModel):
 
         #print('mean of samples:', torch.abs(all_samples - torch.mean(all_samples)))
         #term_flat = torch.maximum(torch.abs(all_samples) - self.model.config.model.upper_bound, torch.zeros(len(all_samples)))
-        term_flat1 = torch.maximum(torch.abs(potentials_from_d1[:,0]) - self.model.config.model.bound.upper_bound, torch.zeros(len(potentials_from_d1[:,0])))
-        term_flat2 = torch.maximum(torch.abs(potentials_from_d2[:,0]) - self.model.config.model.bound.upper_bound, torch.zeros(len(potentials_from_d2[:,0])))
+        tmp1 = torch.zeros(len(potentials_from_d1[:,0]), device=potentials_from_d1.device) #array of zeros on same device (GPU vs CPU) as data
+        tmp2 = torch.zeros(len(potentials_from_d2[:,0]), device=potentials_from_d1.device)
 
-        #loss_flat = 0.1*torch.pow(torch.linalg.norm(term_flat, ord=2),2)
-        #print('Help', torch.linalg.norm(term_flat, ord=2))
-        a = torch.inner(term_flat1, term_flat1) / len(term_flat1)
-        b = torch.inner(term_flat2, term_flat2) / len(term_flat2)
+
+        term_flat1 = torch.maximum(torch.abs(potentials_from_d1[:,0]) - self.model.config.model.bound.upper_bound, tmp1)
+        term_flat2 = torch.maximum(torch.abs(potentials_from_d2[:,0]) - self.model.config.model.bound.upper_bound, tmp2)
+
+        a = torch.inner(term_flat1, term_flat1) / len(term_flat1) #normalize for number of samples
+        b = torch.inner(term_flat2, term_flat2) / len(term_flat2) #normalize for number of samples
         #print('Die beiden bound loss terme: ',  len(term_flat2), a.item(), b.item())
-        #loss_flat = torch.inner(term_flat1, term_flat1) / len(term_flat1) + torch.inner(term_flat2, term_flat2) / len(term_flat2)
-        loss_flat = self.model.config.model.bound.lambda_current * (a+b) #normalize for number of samples
+        loss_flat = a+b
+        my_lambda = self.model.config.model.bound.lambda_current 
         #print('d1: ',all_samples.size())
-        loss = loss_W + loss_flat
+        loss = loss_W + my_lambda * loss_flat
 
-        #print('flat loss: ', potentials_from_d2)
-
-
-        #if(loss_flat > 0):
-        #    print('Nicht verschwindender flat loss:', loss_flat)
-
-        return [loss, loss_W, loss_flat], (potentials_from_d1, potentials_from_d2)
+        return [loss, loss_W, my_lambda * loss_flat], (potentials_from_d1, potentials_from_d2)
 
     def add_to_meters(self, state):
         self.meters['loss'].add(state['loss'].item())

@@ -28,6 +28,12 @@ Implementation and evaluation of Lipschitz neural networks (LNets). Paper link: 
 **Note on PyTorch version**: All the experiments were performed using PyTorch version 0.4.1, although the code is expected
 to run using Pytorch 1.0. 
 
+# Usage
+## Specify input distributions
+There are two ways in which the user may give input data. They can either specify a distribution by an analytical expression such that samples can drawn from this law.
+
+Alternatively, one can simply provide a file containing the data set. This is particularly useful when one wishes to analyse experimental data. In both cases we impose that the normalization of the measures is related to the number of samples taken into account. For the latter this is simply the number of individual data points contained in the data set while for the former the number of samples must be specified by the user for each distribution.
+
 # Models
 Code that implements the core ideas presented in the paper are shown below. 
 

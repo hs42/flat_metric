@@ -21,6 +21,7 @@ tmp.sort()
 
 n_r = len(os.listdir(os.path.join(path, 'many_samples', tmp[0])))
 #Assume that in each for each scenaria we conisder same dimensions and probed r values
+n_dim = len(tmp)
 
 r = np.zeros(n_r)
 dims = []
@@ -123,9 +124,9 @@ for i in range(2):
 axs[0,1].set_title(r'Uncertainties of these relative errors $\Delta(\hat{\rho}_F/\rho_F-1)$')
 
 axs[0,0].set_title(r'Relative error $\hat{\rho}_F/\rho_F-1$')
-axs[1,0].set_title(r'Bound penalties $\mathcal{L}_b / \lambda$')
+axs[1,0].set_title(r'Bound penalties $\mathcal{L}_b$')
 
-axs[1,1].set_title(r'Uncertainties of these penalties $\Delta (\mathcal{L}_b / \lambda)$')
+axs[1,1].set_title(r'Uncertainties of these penalties $\Delta \mathcal{L}_b$')
 
 
 fig.savefig('estimates_over_ground_truth.png', dpi=300, format='PNG',bbox_inches = "tight")

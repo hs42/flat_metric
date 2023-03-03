@@ -10,7 +10,7 @@ import json
 
 #important variables
 data_points_to_consider = 50 #the number of last epochs to consider in each experiment (=training of a nn) to infer the values by taking the mean
-plot_uncertainties = True #tweak this parameter to either plot the data itself (False) or its standard deviations (True)
+plot_uncertainties = False #tweak this parameter to either plot the data itself (False) or its standard deviations (True)
 
 
 
@@ -187,8 +187,8 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
 
         title1 = {False: r'Relative error $\hat{\rho}_F/\rho_F-1$' + ' for $m={m}$'.format(m=unique_m[k]), 
                     True: r'Uncertainty $\Delta(\hat{\rho}_F/\rho_F-1)$' + ' for $m={m}$'.format(m=unique_m[k])}
-        title2 = {False: r'Bound penalties $\mathcal{L}_b / \lambda$' + ' for $m={m}$'.format(m=unique_m[k]),
-                    True: r'Uncertainty $\Delta(\mathcal{L}_b / \lambda)$' + ' for $m={m}$'.format(m=unique_m[k])}
+        title2 = {False: r'Bound penalties $\mathcal{L}_b$' + ' for $m={m}$'.format(m=unique_m[k]),
+                    True: r'Uncertainty $\Delta\mathcal{L}_b$' + ' for $m={m}$'.format(m=unique_m[k])}
         ax[k,0].set_title(title1[plot_uncertainties])
         ax[k,1].set_title(title2[plot_uncertainties])
 
@@ -226,9 +226,10 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     ax[2,1].hist(relative_errors[1,:,:,0], bins=np.arange(0.8, 2.2, 0.1))
     """
     
-    path_to_save = asksaveasfile(mode='w')
+    path_to_save = asksaveasfile(mode='w', defaultextension=".png")
     if path_to_save is not None: # asksaveasfile return `None` if dialog closed with "cancel".
         tmp = {False: '', True: '_uncertainties'}[plot_uncertainties]
+
         #truncate by name[:-4] to remove '.png' provided by user (we add it later on)
         fig.savefig(path_to_save.name[:-4] + tmp + '.png', format='PNG', dpi=300, bbox_inches = "tight")
         fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.png', format='PNG', dpi=300, bbox_inches = "tight")

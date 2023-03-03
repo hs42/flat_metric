@@ -63,8 +63,9 @@ def save_PCA(outpath, PC, raw_data):
     col_names = ["PC{j}".format(j=i+1) for i in range(n_dim)]
     nice_principal_components = pd.DataFrame(PC, columns=col_names)
     nice_principal_components['cell_type'] = raw_data['cell_type']
-    sign = np.sign(nice_principal_components[nice_principal_components['cell_type'] == 'Group1']['PC1'][0])
-    nice_principal_components.loc[nice_principal_components['cell_type'] == 'Group1', 'PC1'] = nice_principal_components[nice_principal_components['cell_type'] == 'Group1']['PC1'] - sign*5
+    
+    #sign = np.sign(nice_principal_components[nice_principal_components['cell_type'] == 'Group1']['PC1'][0])
+    #nice_principal_components.loc[nice_principal_components['cell_type'] == 'Group1', 'PC1'] = nice_principal_components[nice_principal_components['cell_type'] == 'Group1']['PC1'] - sign*5
     
     nice_principal_components.to_pickle(os.path.join(outpath, "processed_data_PCA_dim={d}.pkl".format(d=n_dim)))
 
@@ -107,13 +108,13 @@ def generate_sample_datafiles(processed_data, outpath, type1, type2, val_fractio
 """
 config values
 """
-path_to_raw = "data/genes_raw_splatter_untersch_Anzahl.csv"
+path_to_raw = "./experiments/Splatter/genes_splatter.csv"
 #path_to_raw = "data/variable_genes_raw.csv"
 path_to_save_processed = "data/samples"
 
 dim_PCA = 2
 #cell_types = ['NB', 'TAP', 'aNSC0', 'aNSC1', 'aNSC2', 'qNSC1', 'qNSC2']
-cell_types = ['Group1', 'Group2']#, 'Group3', 'Group4']
+cell_types = ['Group1', 'Group2', 'Group3', 'Group4']
 
 linear_layer_type = 'spectral_normal'
 
@@ -123,7 +124,7 @@ path_to_default =      './lnets/tasks/dualnets/configs/single_cell_data_revised.
 config_To_be_written = './lnets/tasks/dualnets/configs/single_cell_comparison.json'
 model_name = "dual_fc_flat" if flat else "dual_fc"
 #out_path = "./out/val_test2_single_cell_comparison_flat" if flat else "./out/single_cell_comparison_Wasserstein"
-out_path = "out/3_splatter_test_data_untersch_Anzahl"
+out_path = "out/spaltter"
 
 """
 loading and preprocessing

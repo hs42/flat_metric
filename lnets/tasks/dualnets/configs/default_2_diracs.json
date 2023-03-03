@@ -57,7 +57,7 @@
     }
   },
   "optim": {
-    "optimizer": "aggmo",
+    "optimizer": "adam",
     "lr_schedule": {
       "name": "step",
       "lr_init": 0.01,
@@ -148,8 +148,8 @@
   "logging": {
     "report_freq": 1,
     "save_model": false,
-    "save_best": true,
-    "check_orthogonality": true
+    "save_best": false,
+    "check_orthogonality": false
   },
   "cuda": false,
   "visualize": false

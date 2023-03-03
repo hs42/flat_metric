@@ -22,6 +22,7 @@ class MultiSphericalShell(BaseDistrib):
         # First, sample origin-centered shells.
         if self.dim > 1:
             # Sample from an isotropic normal distribution and normalize the obtained samples.
+            
             samples = np.random.multivariate_normal(mean=np.zeros(shape=self.dim), cov=np.eye(self.dim),
                                                     size=size)
             # Origin centered sample.

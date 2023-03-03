@@ -10,7 +10,7 @@ import json
 
 #important variables
 data_points_to_consider = 50 #the number of last epochs to consider in each experiment (=training of a nn) to infer the values by taking the mean
-plot_uncertainties = False #tweak this parameter to either plot the data itself (False) or its standard deviations (True)
+plot_uncertainties = True #tweak this parameter to either plot the data itself (False) or its standard deviations (True)
 
 
 
@@ -100,10 +100,11 @@ def load_data(path, dim_by_user):
 
         #store important data
         distance_estimates[i, 0] = -np.mean(distance_train[:-data_points_to_consider:-1,1]) #mean of last data_points_to_consider entries
-        distance_estimates[i ,1] = np.std(distance_train[:-data_points_to_consider:-1,1]) #std of last data_points_to_consider entries
+        distance_estimates[i ,1] = np.std(distance_train[:-data_points_to_consider:-1,1])  / np.sqrt(data_points_to_consider)#error of the mean of last data_points_to_consider entries
 
         actual_penalties[i, 0] = np.mean(lambda_penalties[:-data_points_to_consider:-1,1]) #mean of last 10 entries of actual_penalty
-        actual_penalties[i, 1] = np.std(lambda_penalties[:-data_points_to_consider:-1,1]) #mean of last 10 entries of actual_penalty
+        actual_penalties[i, 1] = np.std(lambda_penalties[:-data_points_to_consider:-1,1])  / np.sqrt(data_points_to_consider) #error of the mean of last data_points_to_consider entries
+
         
         groundtruth = min(2.0, r) + np.abs(n-m)/min(n, m)
 
@@ -155,11 +156,24 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
 
     fig, ax = plt.subplots(len(unique_m), 2, figsize=(16, 16))
 
-    x_label_list = [f'{r0:.1f}' for r0 in unique_r]
 
 
     min_penalty = 0
     max_penalty = 0.1
+    min_err = -0.2
+    max_err =  0.2
+
+    if plot_uncertainties:
+        min_penalty = 0
+        max_penalty = 0.01
+        min_err =  0.0
+        max_err =  0.01
+
+    r_start = 1 #index from which to start plotting radius
+
+    x_label_list = [f'{r0:.1f}' for r0 in unique_r]
+    x_label_list = x_label_list[r_start:]
+
 
     plt.rc('axes', labelsize=16) #fontsize of the x and y labels
 
@@ -168,11 +182,11 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     print('Plotting data ...')
 
     for k in range(len(unique_m)):
-        img.append(ax[k,0].imshow(np.abs(relative_errors_plot[k,:,:,plot_uncertainties_par]), norm=colors.LogNorm(vmin=0.01, vmax=0.3)))#, vmin=0.0, vmax=2.0))# extent=[0,n_ax,0,n_ax], vmin=0, vmax=2,  cmap='hot'))
-        img.append(ax[k,1].imshow(penalties_plot[k,:,:,plot_uncertainties_par], vmin=min_penalty, vmax=max_penalty))#, extent=[0,n_ax,0,n_ax], vmin=min_penalty, vmax=max_penalty,  cmap='hot'))
+        img.append(ax[k,0].imshow(relative_errors_plot[k,:,r_start:,plot_uncertainties_par], vmin=min_err, vmax=max_err))#, vmin=0.0, vmax=2.0))# extent=[0,n_ax,0,n_ax], vmin=0, vmax=2,  cmap='hot'))
+        img.append(ax[k,1].imshow(penalties_plot[k,:,r_start:,plot_uncertainties_par], vmin=min_penalty, vmax=max_penalty))#, extent=[0,n_ax,0,n_ax], vmin=min_penalty, vmax=max_penalty,  cmap='hot'))
 
-        title1 = {False: r'Absolute relative error $|\hat{W}/W-1|$' + ' for $m={m}$'.format(m=unique_m[k]), 
-                    True: r'Uncertainty $\Delta|\hat{W}/W-1|$' + ' for $m={m}$'.format(m=unique_m[k])}
+        title1 = {False: r'Relative error $\hat{\rho}_F/\rho_F-1$' + ' for $m={m}$'.format(m=unique_m[k]), 
+                    True: r'Uncertainty $\Delta(\hat{\rho}_F/\rho_F-1)$' + ' for $m={m}$'.format(m=unique_m[k])}
         title2 = {False: r'Bound penalties $\mathcal{L}_b / \lambda$' + ' for $m={m}$'.format(m=unique_m[k]),
                     True: r'Uncertainty $\Delta(\mathcal{L}_b / \lambda)$' + ' for $m={m}$'.format(m=unique_m[k])}
         ax[k,0].set_title(title1[plot_uncertainties])
@@ -194,14 +208,14 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     fig2, ax2 = plt.subplots(1,1)
     k = 5
     plt.rc('axes', labelsize=30) #fontsize of the x and y labels
-    img2 = ax2.imshow(np.abs(relative_errors_ratios_plot), norm=colors.LogNorm(vmin=0.01, vmax=0.3))
-    x_label_list = unique_r[::k]
+    img2 = ax2.imshow(relative_errors_ratios_plot[:, r_start:], vmin=min_err, vmax=max_err)
+    x_label_list2 = x_label_list[::k]
     y_label_list = ratio_n_to_m[::k]
-    ax2.set_xticks(np.arange(len(unique_r))[::k])
+    ax2.set_xticks(np.arange(len(x_label_list))[::k])
     ax2.set_yticks(np.arange(len(ratio_n_to_m))[::k])
-    ax2.set_xticklabels(x_label_list)
+    ax2.set_xticklabels(x_label_list2)
     ax2.set_yticklabels(y_label_list)
-    title3 = {False: r'$|\hat{W}/W-1|$', True:r'$\Delta|\hat{W}/W-1|$'}
+    title3 = {False: r'$\hat{\rho}_F/\rho_F-1$', True:r'$\Delta(\hat{\rho}_F/\rho_F-1)$'}
     ax2.set(xlabel=r'$r_0$', ylabel=r'mass ratio $n/m$', title=title3[plot_uncertainties])
     fig2.colorbar(img2)
 
@@ -215,6 +229,7 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     path_to_save = asksaveasfile(mode='w')
     if path_to_save is not None: # asksaveasfile return `None` if dialog closed with "cancel".
         tmp = {False: '', True: '_uncertainties'}[plot_uncertainties]
+        #truncate by name[:-4] to remove '.png' provided by user (we add it later on)
         fig.savefig(path_to_save.name[:-4] + tmp + '.png', format='PNG', dpi=300, bbox_inches = "tight")
         fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.png', format='PNG', dpi=300, bbox_inches = "tight")
     path_to_save.close()

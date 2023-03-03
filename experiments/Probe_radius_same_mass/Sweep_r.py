@@ -2,11 +2,12 @@ import json
 import numpy as np
 import subprocess
 import os
+import warnings
 
 '''
 quick / most important parameters
 '''
-dim = 4
+dim = 5
 few_samples = True
 
 
@@ -16,7 +17,9 @@ if few_samples:
 else:
     sample_size = 30 * 2**dim #account for need for more training data in higher dimensions
 
-
+if sample_size > 40000: #some threshold
+    warnings.warn('Too many samples. Numpy might not be able to handle that. Will reduce samples to 40000') 
+    sample_size = 40000
 
 #radii_to_test = np.arange(radius_start, radius_stop, radius_step)
 radii_to_test = list(np.arange(0.01, 3, 0.1)) + list(range(3,33,5)) #list concatenation

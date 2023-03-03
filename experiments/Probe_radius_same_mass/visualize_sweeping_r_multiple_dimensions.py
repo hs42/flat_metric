@@ -40,7 +40,7 @@ for j, experiment in enumerate(subdirs):
         linear_type = data['model']['linear']['type']
         distance_train = np.loadtxt(os.path.join(path, experiment, dir, 'logs{s}train_loss_W.log'.format(s=os.sep)), skiprows=1, delimiter=',')
         flat_metric[j, i,0] = -np.mean(distance_train[:-data_p_to_consider:-1,1]) #mean of last data_p_to_consider entries
-        flat_metric[j, i,1] = np.std(distance_train[:-data_p_to_consider:-1,1]) #mean of last data_p_to_consider entries
+        flat_metric[j, i,1] = np.std(distance_train[:-data_p_to_consider:-1,1]) / np.sqrt(data_p_to_consider) #error of the mean
 
 truth_x = np.linspace(np.amin(r), np.amax(r))
 truth_y = [min(x,2.0) for x in truth_x]

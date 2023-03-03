@@ -18,7 +18,7 @@ if not os.path.exists(os.path.join(path, 'many_samples')):
 
 tmp = os.listdir(os.path.join(path, 'many_samples'))
 tmp.sort()
-n_dim = len(tmp)
+
 n_r = len(os.listdir(os.path.join(path, 'many_samples', tmp[0])))
 #Assume that in each for each scenaria we conisder same dimensions and probed r values
 
@@ -50,18 +50,18 @@ for k, dim_dir in enumerate(tmp):
 
 
             flat_metric[key][k, i,0] = -np.mean(distance_train[:-data_p_to_consider:-1,1]) #mean of last 10 entries
-            flat_metric[key][k, i,1] = np.std(distance_train[:-data_p_to_consider:-1,1]) #mean of last 10 entries
+            flat_metric[key][k, i,1] = np.std(distance_train[:-data_p_to_consider:-1,1]) / np.sqrt(data_p_to_consider)# error of mean
 
             actual_penalties[key][k, i,0] = np.mean(lambda_penalties[:-data_p_to_consider:-1,1]) #mean of last 10 entries
-            actual_penalties[key][k, i,1] = np.std(lambda_penalties[:-data_p_to_consider:-1,1]) #mean of last 10 entries
+            actual_penalties[key][k, i,1] = np.std(lambda_penalties[:-data_p_to_consider:-1,1]) / np.sqrt(data_p_to_consider)# error of mean
 
             tmp2 = np.mean(loss_flat[:-data_p_to_consider:-1,1]) 
-            tmp2_std = np.var(loss_flat[:-data_p_to_consider:-1,1]) 
+            tmp2_std = np.std(loss_flat[:-data_p_to_consider:-1,1]) / np.sqrt(data_p_to_consider)# error of mean
 
             loss_ratios[key][k,i,0] = - tmp2 / flat_metric[key][k,i,0] #ratio of mean of last data_p_to_consider entries
             
             with np.errstate(divide='ignore'): #ignore 'divide by 0' and resulting NaNs for now
-                loss_ratios[key][k,i,1] =  np.sqrt((flat_metric[key][k,i,1]/flat_metric[key][k,i,0]) + (tmp2_std/tmp2)**2) #error propagation part 1
+                loss_ratios[key][k,i,1] =  np.sqrt((flat_metric[key][k,i,1]/flat_metric[key][k,i,0])**2 + (tmp2_std/tmp2)**2) #error propagation part 1
 
 
         loss_ratios[key][:,:,1] = np.where(np.isfinite(loss_ratios[key][:,:,1]), loss_ratios[key][:,:,1], 0)
@@ -97,13 +97,19 @@ for k, dim in enumerate(dims):
         y_label_list[k+l*len(dims)] = 'd=' + str(dim) + ', ' + key[0]
 
 # plot 4 subplots
+minerr = [-0.2, 0.0]
+maxerr = [0.2, 0.01]
+
+minbound = [0.0, 0.0]
+maxbound = [0.1, 0.01]
+
 for i in range(2):
     for j in range(2):
         if i == 0:
-            im = axs[i,j].imshow(relative_error[:,r_index_to_befin_plotting:,j])
+            im = axs[i,j].imshow(relative_error[:,r_index_to_befin_plotting:,j], vmin=minerr[j], vmax=maxerr[j])
 
         else:
-            im = axs[i,j].imshow(actual_penalties_to_plot[:,r_index_to_befin_plotting:,j])
+            im = axs[i,j].imshow(actual_penalties_to_plot[:,r_index_to_befin_plotting:,j], vmin=minbound[j], vmax=maxbound[j])
         axs[i,j].set_xticklabels(x_label_list[::5])
         axs[i,j].set_xticks(np.arange(len(x_label_list))[::5])
         axs[i,j].set_xlabel(r'$r_0$')
@@ -114,9 +120,9 @@ for i in range(2):
         fig.colorbar(im, cax=cax, orientation='vertical')
 
   
-axs[0,1].set_title(r'Uncertainties of these relative errors $\Delta(\hat{W}/W-1)$')
+axs[0,1].set_title(r'Uncertainties of these relative errors $\Delta(\hat{\rho}_F/\rho_F-1)$')
 
-axs[0,0].set_title(r'Relative error $(\hat{W}/W-1)$')
+axs[0,0].set_title(r'Relative error $\hat{\rho}_F/\rho_F-1$')
 axs[1,0].set_title(r'Bound penalties $\mathcal{L}_b / \lambda$')
 
 axs[1,1].set_title(r'Uncertainties of these penalties $\Delta (\mathcal{L}_b / \lambda)$')

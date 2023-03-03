@@ -69,18 +69,26 @@ for m_i, m in enumerate(m_to_test):
             mock_paras.l_fraction = l_f
             data_generator = sum_of_Diracs.Sum_of_Diracs_with_different_radii(mock_paras)
             groundtruth[m_i, n_i, l_i] = data_generator.get_groundtruth(m)
-            s1 = np.zeros((int(m * 1/(1-val_fraction)), dim))
-            s2 = np.array(data_generator(int(n * 1/(1-val_fraction)))) #actuallay test for the specified values
-
+            s1 = np.zeros((m, dim))
+            s2 = np.array(data_generator(n))
             if val_fraction > 0.0:
-                s1_train, s1_test = train_test_split(s1, test_size=val_fraction)
-                s2_train, s2_test = train_test_split(s2, test_size=val_fraction)
+                """
+                Also note that as we consider a uniform distribution, we expect train and val to differ highly with only so little data point
+                """
+                s1_train = s1
+                s2_train = s2
+                mock_paras.l = np.floor(l_f * n * val_fraction).astype(int)
+                data_generator = sum_of_Diracs.Sum_of_Diracs_with_different_radii(mock_paras)
+                s1_test = np.zeros((int(m*val_fraction), dim))
+                s2_test =  np.array(data_generator(min(int(n*val_fraction), mock_paras.l+1)))
+
+                groundtruth[m_i, n_i, l_i] = data_generator.get_groundtruth(m)
             
                 np.savetxt(os.path.join(out_path, 'val_samples1'), s1_test)
                 np.savetxt(os.path.join(out_path, 'val_samples2'), s2_test)
 
             else:
-                s1_train, s2_train = s1.to_numpy(), s2.to_numpy()
+                s1_train, s2_train = s1, s2
 
             np.savetxt(os.path.join(out_path, 'train_samples1'), s1_train)
             np.savetxt(os.path.join(out_path, 'train_samples2'), s2_train)
@@ -106,7 +114,6 @@ for m_i, m in enumerate(m_to_test):
             #compute flat metric
             
             subprocess.call("python .{s}lnets{s}tasks{s}dualnets{s}mains{s}train_dual.py ".format(s=os.sep) + config_To_be_written, shell=True)
-            break
 
 np.save(os.path.join(out_path, 'groundtruth'), groundtruth)
 

@@ -126,7 +126,7 @@ def train_dualnet(model, loaders, config):
                 save_current_model_and_optimizer(model, optimizer, model_dir=dirs.model_dir, epoch=state['epoch'])
 
             # Visualize the learned critic landscape.
-            if config.visualize:
+            if config.visualize and state['epoch'] > 1950:
                 save_1_or_2_dim_dualnet_visualizations(model, dirs.figures_dir, config,
                                                        state['epoch'], state['loss'])
 

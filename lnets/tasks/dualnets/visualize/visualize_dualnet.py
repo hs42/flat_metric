@@ -5,6 +5,7 @@ import torch
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import matplotlib
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.ticker as ticker
@@ -36,10 +37,11 @@ def visualize_1d_critic(model, xrange, step, cuda=False):
     # Plot the critic landscape.
     plt.figure()
     ax = plt.subplot(111)
-    ax.plot(xrange, outs, label="approximation")
+    ax.plot(xrange, outs, label=r"$f_\Theta$", linewidth=3)
+    #ax.scatter(np.zeros_like(state['sample']), state['sample'])
 
-    ax.set_xlabel("input")
-    ax.set_ylabel("output")
+    ax.set_xlabel("Input variable")
+    ax.set_ylabel("Output")
     ax.grid()
 
     # ax.xaxis.set_major_locator(ticker.MultipleLocator(X_MAJOR_LOCATOR_1D))
@@ -121,7 +123,21 @@ def save_2d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
 
 
 def save_1d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=None, after_training=False):
-    visualize_1d_critic(model, config.visualize_1d.xrange, config.visualize_1d.step, config.cuda)
+    ax = visualize_1d_critic(model, config.visualize_1d.xrange, config.visualize_1d.step, config.cuda)
+
+
+    y1 = model.forward(Variable(torch.from_numpy(np.array([config.distrib1.mu1])).float()))
+    y2 = model.forward(Variable(torch.from_numpy(np.array([config.distrib2.mu1])).float()))
+
+
+    GA1 = np.random.normal(config.distrib1.mu1, config.distrib1.sigma1, size=5)
+    GA2 = np.random.normal(config.distrib1.mu2, config.distrib1.sigma2, size=5)
+    GB1 = np.random.normal(config.distrib2.mu1, config.distrib2.sigma1, size=5)
+    GB2 = np.random.normal(config.distrib2.mu2, config.distrib2.sigma2, size=5)
+
+    ax.scatter(np.concatenate((GA1, GA2)), np.ones(10)*y1.data.numpy(), label='Distribution 1', c='blue')
+    ax.scatter(np.concatenate((GB1, GB2)), np.ones(10)*y2.data.numpy(), label='Distribution 2', c='red')
+
 
     if after_training:
         title_text = "Model: {} - Activation: {}".format(config.model.name, config.model.activation)
@@ -133,9 +149,15 @@ def save_1d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
                                                                                loss)
         save_path = os.path.join(figures_dir, "epoch_{}_visualize_1d_".format(epoch))
 
-    plt.title(title_text, x=0.5, y=1.0)
+    #plt.title(title_text, x=0.5, y=1.0)
     plt.tight_layout()
     plt.legend()
-    plt.savefig(save_path)
+
+    SMALL_SIZE = 20
+    matplotlib.rc('font', size=SMALL_SIZE)
+    matplotlib.rc('axes', titlesize=SMALL_SIZE)
+    matplotlib.rc('ytick', labelsize=SMALL_SIZE)
+    matplotlib.rc('legend', fontsize=10) 
+    plt.savefig(save_path, dpi=300)
     # plt.show(block=True)
     plt.close('all')

@@ -66,21 +66,3 @@ def construct_distrib_instance(distrib_config):
 
     return distrib
 
-"""
-is depracated
-
-def load_data_custom_single_cell(config):
-    path_to_s1 = config['data1']['path_to_samples']
-    path_to_s2 = config['data1']['path_to_samples']
-
-    s1 = np.load(path_to_s1)
-    s2 = np.load(path_to_s2)
-
-
-    #Now that we have the data, wrap them into a torch-compatible 'Dataset class'
-    dataset_s1 = custom_text_dataset_for_single_cell_data(s1)
-    dataset_s2 = custom_text_dataset_for_single_cell_data(s2)
-
-    #Now, wrap those datasets into torch-compatible Dataloaders for easy use during training
-    
-"""

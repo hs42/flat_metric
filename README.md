@@ -10,6 +10,16 @@ Implementation and evaluation of Lipschitz neural networks (LNets). Paper link: 
     
 * Install PyTorch, following instructions in `https://pytorch.org`. 
 
+* Install from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+import numpy as np
+import pandas as pd
+import os
+import json
+import subprocess
+
+import sys
+
 * Install torchnet by:
     ```
     pip install git+https://github.com/pytorch/tnt.git@master

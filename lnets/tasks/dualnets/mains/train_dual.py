@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 plt.interactive(False)
 
 from lnets.utils.config import process_config
+
 from lnets.tasks.dualnets.distrib.load_distrib import load_distrib
+from lnets.data.load_data import load_data
+
 from lnets.trainers.trainer import Trainer
 from lnets.utils.logging import Logger
 from lnets.utils.training_getters import get_optimizer, get_scheduler
@@ -16,7 +19,6 @@ from lnets.utils.seeding import set_experiment_seed
 from lnets.utils.misc import *
 from lnets.utils.training_getters import get_training_dirs
 from lnets.tasks.dualnets.visualize.visualize_dualnet import *
-from lnets.data.load_data_custom import *
 
 
 def train_dualnet(model, loaders, config):

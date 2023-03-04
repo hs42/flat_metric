@@ -12,6 +12,59 @@ from lnets.tasks.dualnets.mains.custom_dataset import *
 from lnets.tasks.dualnets.distrib.load_distrib import DistribLoader
 
 
+class linked_samples(DistribLoader):
+    """
+    The linked_samples class provides a method to 
+    """
+
+    def __init__(self, config, dataloader1, dataloader2, mode="train"): #config,
+        #super().__init__(self, mode="train") #config
+        assert mode == "train" or mode == "test", "Mode must be either 'train' or 'test'."
+        
+        self.config = config
+        self.mode = mode
+        self.sampled_so_far = 0
+
+        self.dataloader1 = dataloader1
+        self.dataloader2 = dataloader2
+       
+
+    def __reset_iters(self):
+        return iter(self.dataloader1), iter(self.dataloader2)
+
+    def __next__(self):
+        if self.sampled_so_far < self.config.optim.epoch_len:
+            self.sampled_so_far += 1
+            
+            # In the end, we need a way, to extract batch_size (encoded in the Dataloaders) many samples from dataloader1 and dataloader2
+            # 
+            try:
+                distrib1_samples = next(self.dataloader1)
+                distrib2_samples = next(self.dataloader2)
+            except: #if iterator objects of dataloader1 or dataloader2 are exhausted. Want to begin all over again in this case
+                # Note that this is an artefact of having dataloaders within the linked_samples::__next__() method
+                # Later on, we will iterate in trainers/trainer.py as follows:
+                # for sample in instance_of_linked_samples:
+                #     Do some training
+
+                iter1, iter2 = self.__reset_iters()
+                distrib1_samples = next(iter1)
+                distrib2_samples = next(iter2)
+
+            # if the samples are already PyTorch tensors, don't touch them.
+            if not isinstance(distrib1_samples, torch.Tensor):
+                distrib1_samples = torch.from_numpy(distrib1_samples).float()
+
+            if not isinstance(distrib2_samples, torch.Tensor):
+                distrib2_samples = torch.from_numpy(distrib2_samples).float()
+
+            return (distrib1_samples.float(),
+                    distrib2_samples.float())
+        else:
+            raise StopIteration
+
+
+
 def build_loaders(cfg, train_data, val_data, test_data):
     """
     data_name = config['data']['name'].lower()
@@ -68,6 +121,9 @@ def build_loaders(cfg, train_data, val_data, test_data):
     return final_linked_loader
 
 def load_data(cfg):
+    """
+    The load_data methods
+    """
 
     if 'path_train' in cfg.distrib1 and os.path.exists(cfg.distrib1.path_train):
         train_data1 = custom_text_dataset_for_single_cell_data(cfg.distrib1.path_train)
@@ -90,54 +146,3 @@ def load_data(cfg):
 
     #return build_loaders(config, train_data, val_data, test_data)
     return build_loaders(cfg, [train_data1, train_data2], [val_data1, val_data2], [test_data1, test_data2])
-
-class linked_samples(DistribLoader):
-    def __init__(self, config, dataloader1, dataloader2, mode="train"): #config,
-        #super().__init__(self, mode="train") #config
-        assert mode == "train" or mode == "test", "Mode must be either 'train' or 'test'."
-        
-        self.config = config
-        self.mode = mode
-        self.sampled_so_far = 0
-
-        self.dataloader1 = dataloader1
-        self.dataloader2 = dataloader2
-       
-
-    def __reset_iters(self):
-        return iter(self.dataloader1), iter(self.dataloader2)
-
-    def __next__(self):
-        if self.sampled_so_far < self.config.optim.epoch_len:
-            self.sampled_so_far += 1
-            
-            # In the end, we need a way, to extract batch_size (encoded in the Dataloaders) many samples from dataloader1 and dataloader2
-            # 
-            try:
-                distrib1_samples = next(self.dataloader1)
-                distrib2_samples = next(self.dataloader2)
-            except: #if iterator objects of dataloader1 or dataloader2 are exhausted. Want to begin all over again in this case
-                # Note that this is an artefact of having dataloaders within the linked_samples::__next__() method
-                # Later on, we will iterate in trainers/trainer.py as follows:
-                # for sample in instance_of_linked_samples:
-                #     Do some training
-
-                iter1, iter2 = self.__reset_iters()
-                distrib1_samples = next(iter1)
-                distrib2_samples = next(iter2)
-
-            # if the samples are already PyTorch tensors, don't touch them.
-            if not isinstance(distrib1_samples, torch.Tensor):
-                distrib1_samples = torch.from_numpy(distrib1_samples).float()
-
-            if not isinstance(distrib2_samples, torch.Tensor):
-                distrib2_samples = torch.from_numpy(distrib2_samples).float()
-
-            return (distrib1_samples.float(),
-                    distrib2_samples.float())
-        else:
-            raise StopIteration
-
-
-
-#print('\nSecond iteration of data set: ', next(iter(train_data1)), '\n')

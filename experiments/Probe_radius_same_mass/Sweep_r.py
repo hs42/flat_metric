@@ -28,7 +28,7 @@ linear_layer_type = 'spectral_normal'
 
 path_to_default =      'lnets{s}tasks{s}dualnets{s}configs{s}default_2_diracs.json'.format(s=os.sep)
 config_To_be_written = 'lnets{s}tasks{s}dualnets{s}configs{s}2_diracs.json'.format(s=os.sep)
-out_path = 'out{s}Probe_radius_same_mass{s}{n}_samples{s}dimension_{d}'.format(d=dim, s=os.sep, n=['many', 'few'][few_samples])
+out_path = 'out{s}Probe_radius_same_mass_cpu{s}{n}_samples{s}dimension_{d}'.format(d=dim, s=os.sep, n=['many', 'few'][few_samples])
 
 #read data
 with open(path_to_default) as f:
@@ -65,7 +65,7 @@ for r in radii_to_test:
 
     #write new config file
     with open(config_To_be_written, "w") as write_file:
-        json.dump(data, write_file)
+        json.dump(data, write_file, indent=4)
 
     #compute flat metric
     subprocess.call("python lnets{s}tasks{s}dualnets{s}mains{s}train_dual.py ".format(s=os.sep) + config_To_be_written, shell=True)

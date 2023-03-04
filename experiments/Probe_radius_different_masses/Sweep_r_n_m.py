@@ -66,7 +66,7 @@ for m in m_to_test:
 
             #write new config file
             with open(config_To_be_written, "w") as write_file:
-                json.dump(data, write_file)
+                json.dump(data, write_file, indent=4)
 
             #compute flat metric
             subprocess.call("python lnets{s}tasks{s}dualnets{s}mains{s}train_dual.py ".format(s=os.sep) + config_To_be_written, shell=True)

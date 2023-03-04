@@ -43,6 +43,8 @@ to run using Pytorch 1.0.
 There are two ways in which the user may give input data. They can either specify a distribution by an analytical expression such that samples can drawn from this law.
 
 Alternatively, one can simply provide a file containing the data set. This is particularly useful when one wishes to analyse experimental data. In both cases we impose that the normalization of the measures is related to the number of samples taken into account. For the latter this is simply the number of individual data points contained in the data set while for the former the number of samples must be specified by the user for each distribution.
+Text file, such that it can be read in with np.loadtxt(path_to_data_file). Given the right format, this is taken care of internally (in the custom_dataset class in lnets/tasks/dualnets/mains/custom_dataset.py)
+
 
 # Models
 Code that implements the core ideas presented in the paper are shown below. 

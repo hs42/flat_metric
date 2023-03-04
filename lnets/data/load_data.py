@@ -14,7 +14,9 @@ from lnets.tasks.dualnets.distrib.load_distrib import DistribLoader
 
 class linked_samples(DistribLoader):
     """
-    The linked_samples class provides a method to 
+    The linked_samples class provides a method to concatenate a dataloader for distribution 1 and for distribution 2 into a 
+    common dataloader. A linked_samples will return a tuple (samples from distribution 1, samples from distribution 2), which is 
+    the format needed in the actual training specified in lnets/tasks/dualnets/mains/train_dual.py
     """
 
     def __init__(self, config, dataloader1, dataloader2, mode="train"): #config,
@@ -39,6 +41,7 @@ class linked_samples(DistribLoader):
             # In the end, we need a way, to extract batch_size (encoded in the Dataloaders) many samples from dataloader1 and dataloader2
             # 
             try:
+                #fetch the next samples from the data file
                 distrib1_samples = next(self.dataloader1)
                 distrib2_samples = next(self.dataloader2)
             except: #if iterator objects of dataloader1 or dataloader2 are exhausted. Want to begin all over again in this case
@@ -67,9 +70,12 @@ class linked_samples(DistribLoader):
 
 def build_loaders(cfg, train_data, val_data, test_data):
     """
-    data_name = config['data']['name'].lower()
-    batch_size = config['optim']['batch_size']
-    num_workers = config['data']['num_workers']
+    The build_loaders() method returns a dictionary of linked_samples objects, each of which will yield tuples of the form 
+    (samples from distribution 1, samples from distribution 2).
+
+    In a first step, a dictionary of PyTorch Dataloader objects for the training, testing, and validation dataset is constructed for
+    each distribution. Afterwads, the dataloaders of each distribution are put together in linked_samples object, which will return the
+    aforementioned tuples of samples. Lastly, those linked_samples objects are assembled in a dictionary.
     """
 
     loaders_distrib = [dict(), dict()]
@@ -122,27 +128,35 @@ def build_loaders(cfg, train_data, val_data, test_data):
 
 def load_data(cfg):
     """
-    The load_data methods
+    The load_data method provides a method to return a tuple of PyTorches dataloader objects corresponding to 
+    training, test, and validation data for both distributions.
+
+    Returns a dictionary of linked_samples objects, each of which will yield tuples of the form 
+    (samples from distribution 1, samples from distribution 2). This is consistent with the usage of load_distrib() in 
+    lnets/tasks/dualnets/distrib/load_distrib.py such that both methods can be used without changing the syntax in
+    training routine lnets/tasks/dualnets/main/train_dual.py 
+
+    In contrast to the load_distrib() method, the load_data() function relies on a text file of data being specified.
+    New samples of both distributions are read from this data file rather than generated according to a law (which is what load_distrib() does).
     """
 
     if 'path_train' in cfg.distrib1 and os.path.exists(cfg.distrib1.path_train):
-        train_data1 = custom_text_dataset_for_single_cell_data(cfg.distrib1.path_train)
-        train_data2 = custom_text_dataset_for_single_cell_data(cfg.distrib2.path_train)
+        train_data1 = custom_dataset(cfg.distrib1.path_train)
+        train_data2 = custom_dataset(cfg.distrib2.path_train)
 
     if 'path_val' in cfg.distrib1 and os.path.exists(cfg.distrib1.path_val):
-        val_data1 = custom_text_dataset_for_single_cell_data(cfg.distrib1.path_val)
-        val_data2 = custom_text_dataset_for_single_cell_data(cfg.distrib2.path_val)
+        val_data1 = custom_dataset(cfg.distrib1.path_val)
+        val_data2 = custom_dataset(cfg.distrib2.path_val)
     else:
         val_data1 = None
         val_data2 = None
 
     if 'path_test' in cfg.distrib1 and os.path.exists(cfg.distrib1.path_test):
-        test_data1 = custom_text_dataset_for_single_cell_data(cfg.distrib1.path_test)
-        test_data2 = custom_text_dataset_for_single_cell_data(cfg.distrib2.path_test)
+        test_data1 = custom_dataset(cfg.distrib1.path_test)
+        test_data2 = custom_dataset(cfg.distrib2.path_test)
     else:
         test_data1 = None
         test_data2 = None
 
 
-    #return build_loaders(config, train_data, val_data, test_data)
     return build_loaders(cfg, [train_data1, train_data2], [val_data1, val_data2], [test_data1, test_data2])

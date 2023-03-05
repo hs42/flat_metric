@@ -205,7 +205,7 @@ def train_dualnet(model, loaders, config):
         plt.figure()
 
         plt.plot(loss_W[:,0], loss_W[:,1], label=r'Metric loss term $\mathcal{L}_m$')
-        plt.plot(loss_W[10:,0], loss_f[10:,1], label=r'Weighetd bound loss $\lamdba\mathcal{L}_b$')
+        plt.plot(loss_W[10:,0], loss_f[10:,1], label=r'Weighetd bound loss $\lambda\mathcal{L}_b$')
         plt.plot(loss_W[10:,0], loss_f[10:,1]+loss_W[10:,1], label=r'Total loss $\mathcal{L}=\mathcal{L}_m + \lambda\mathcal{L}_b$')
         plt.title('Training losses')
         plt.legend()
@@ -243,7 +243,7 @@ def train_dualnet(model, loaders, config):
         logger.log_meters('test', test_state)
     else:
         #If no test set is specified, load latest model
-        warnings.warn("Attention: the trained models should be tested with a testing distribution/dataset.")
+        warnings.warn("Attention: the trained models should be tested with a testing distribution/dataset. If you use path_train and datasets, this can be avoided by setting val_fraction >0 in the wrapper script")
         warnings.warn('Will continue, but return the last trained model as opposed to the best one on the validation set')
         test_state = {
             'model': model     
@@ -255,9 +255,7 @@ def train_dualnet(model, loaders, config):
 
     return test_state
 
-
-if __name__ == '__main__':
-    print("test")
+def main():
     # Get the config, initialize the model and construct the distribution loader.
     cfg = process_config()
     dual_model = get_model(cfg)
@@ -275,3 +273,5 @@ if __name__ == '__main__':
     final_state = train_dualnet(dual_model, loaders, cfg)
     return final_state
 
+if __name__ == '__main__':
+    main()

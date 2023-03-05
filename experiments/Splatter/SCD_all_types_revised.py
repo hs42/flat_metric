@@ -94,8 +94,8 @@ def generate_sample_datafiles(processed_data, outpath, type1, type2, val_fractio
         s2_train, s2_test = train_test_split(s2.to_numpy(), test_size=val_fraction)
 
         #if we test, split non-training set into validation set (run after each epoch) and a test set (run after training) in equal parts
-        s1_val, s1_test = train_test_split(s1_test.to_numpy(), test_size=0.5)
-        s2_val, s2_test = train_test_split(s2_test.to_numpy(), test_size=0.5)
+        s1_val, s1_test = train_test_split(s1_test, test_size=0.5)
+        s2_val, s2_test = train_test_split(s2_test, test_size=0.5)
       
         np.savetxt(os.path.join(outpath, 'val_samples1'), s1_val)
         np.savetxt(os.path.join(outpath, 'val_samples2'), s2_val)
@@ -132,7 +132,7 @@ path_to_default =      './lnets/tasks/dualnets/configs/single_cell_data_revised.
 config_To_be_written = './lnets/tasks/dualnets/configs/single_cell_comparison.json'
 model_name = "dual_fc_flat" if flat else "dual_fc"
 #out_path = "./out/val_test2_single_cell_comparison_flat" if flat else "./out/single_cell_comparison_Wasserstein"
-out_path = "out/splatter"
+out_path = "out/splatter_check_refactoring"
 
 data_points_to_consider = 50
 
@@ -173,7 +173,7 @@ data['output_root'] = out_path
 
 results = pd.DataFrame(columns=['cell type 1', 'cell type 2', '{a} distance'.format(a='flat' if flat else 'Wassertein'), 'distance uncertainty'])
 
-val_fraction = 0.0
+val_fraction = 0.1
 
 
 #enter loop and sweep through different values for the radius

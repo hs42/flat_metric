@@ -20,6 +20,8 @@ from lnets.utils.misc import *
 from lnets.utils.training_getters import get_training_dirs
 from lnets.tasks.dualnets.visualize.visualize_dualnet import *
 
+import warnings
+
 
 def train_dualnet(model, loaders, config):
     # Set the seed.
@@ -50,6 +52,7 @@ def train_dualnet(model, loaders, config):
         with open(os.path.join(dirs.log_dir, "weight_orthogonality.log"), mode='a', newline='') as log_orth:
                 log_orth.write('Epoch, ||A^TA - I||/||A^TA|| for each weight matrix\n')
 
+    # init lambda log used for storing the current value of lambda, the adaptive penalty balancing factor. Also log the bound benalty L_{bound}
     with open(os.path.join(dirs.log_dir, "lambda.log"), mode='a', newline='') as lambdalog:
         lambdalog.write('Current lambda \t Current actual bound penalty ' + '\n')   
 
@@ -110,11 +113,14 @@ def train_dualnet(model, loaders, config):
     def on_end_epoch(hook_state, state):
         scheduler.step()
 
-        print("\t\t\tTraining loss: {:.4f}".format(state['model'].meters['loss'].value()[0]))
-        print("\t\t\tDistance estimate: {:.4f}".format( - state['model'].meters['loss_W'].value()[0]))
+        #In case you wondered:
         #type(state['model'].meters['loss']) is torchnet.meter.averagevaluemeter.AverageValueMeter -> builds average automatically
 
-        #save most recent distance estimate, if it exists on its own#
+        print("\t\t\tTraining loss: {:.4f}".format(state['model'].meters['loss'].value()[0]))
+        print("\t\t\tDistance estimate: {:.4f}".format( - state['model'].meters['loss_W'].value()[0]))
+        
+
+        #save most recent distance estimate, if it exists on its own
         if('loss_W' in state):
             state['recent_d_estimate'].append( - state['model'].meters['loss_W'].value()[0])
 
@@ -128,7 +134,7 @@ def train_dualnet(model, loaders, config):
                 save_current_model_and_optimizer(model, optimizer, model_dir=dirs.model_dir, epoch=state['epoch'])
 
             # Visualize the learned critic landscape.
-            if config.visualize and state['epoch'] > 1950:
+            if config.visualize:
                 save_1_or_2_dim_dualnet_visualizations(model, dirs.figures_dir, config,
                                                        state['epoch'], state['loss'])
 
@@ -136,6 +142,7 @@ def train_dualnet(model, loaders, config):
         if config.logging.save_best:
             hook_state['best_val'], new_best = save_best_model_and_optimizer(state, hook_state['best_val'],
                                                                              dirs.best_path, config)
+
 
         # Calcualte and log the actual orthogonality of the weight matrices
         if config.logging.check_orthogonality:
@@ -154,6 +161,7 @@ def train_dualnet(model, loaders, config):
                 log_orth.write('\n')    
 
 
+        # log the values of lambda, the adaptive penalty balancing factor. Also log the bound benalty L_{bound}
         with open(os.path.join(dirs.log_dir, "lambda.log"), mode='a', newline='') as lambdalog:
             current_lambda = config.model.bound.lambda_current
             if current_lambda == 0:
@@ -196,9 +204,9 @@ def train_dualnet(model, loaders, config):
         loss_f = np.loadtxt(os.path.join(dirs.log_dir, "train_loss_flat.log"), skiprows=1, delimiter=',')
         plt.figure()
 
-        plt.plot(loss_W[:,0], loss_W[:,1], label='Wasserstein loss')
-        plt.plot(loss_W[10:,0], loss_f[10:,1], label='bound loss')
-        plt.plot(loss_W[10:,0], loss_f[10:,1]+loss_W[10:,1], label='loss')
+        plt.plot(loss_W[:,0], loss_W[:,1], label=r'Metric loss term $\mathcal{L}_m$')
+        plt.plot(loss_W[10:,0], loss_f[10:,1], label=r'Weighetd bound loss $\lamdba\mathcal{L}_b$')
+        plt.plot(loss_W[10:,0], loss_f[10:,1]+loss_W[10:,1], label=r'Total loss $\mathcal{L}=\mathcal{L}_m + \lambda\mathcal{L}_b$')
         plt.title('Training losses')
         plt.legend()
         plt.savefig(os.path.join(dirs.figures_dir, 'Training_losses.png'), format='PNG')
@@ -234,9 +242,12 @@ def train_dualnet(model, loaders, config):
         test_state = trainer.test(model, loaders['test'])
         logger.log_meters('test', test_state)
     else:
-        print("Attention: the trained models should be tested with a testing distribution/dataset.")
-        print('Will continue, but return a None object as final_state')
-        test_state = None
+        #If no test set is specified, load latest model
+        warnings.warn("Attention: the trained models should be tested with a testing distribution/dataset.")
+        warnings.warn('Will continue, but return the last trained model as opposed to the best one on the validation set')
+        test_state = {
+            'model': model     
+        }
     # Visualize the learned critic landscape.
     if config.visualize:
         save_1_or_2_dim_dualnet_visualizations(model, dirs.figures_dir, config,
@@ -262,3 +273,5 @@ if __name__ == '__main__':
 
     # Train.
     final_state = train_dualnet(dual_model, loaders, cfg)
+    return final_state
+

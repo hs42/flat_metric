@@ -92,9 +92,15 @@ def generate_sample_datafiles(processed_data, outpath, type1, type2, val_fractio
     if val_fraction > 0.0:
         s1_train, s1_test = train_test_split(s1.to_numpy(), test_size=val_fraction)
         s2_train, s2_test = train_test_split(s2.to_numpy(), test_size=val_fraction)
+
+        #if we test, split non-training set into validation set (run after each epoch) and a test set (run after training) in equal parts
+        s1_val, s1_test = train_test_split(s1_test.to_numpy(), test_size=0.5)
+        s2_val, s2_test = train_test_split(s2_test.to_numpy(), test_size=0.5)
       
-        np.savetxt(os.path.join(outpath, 'val_samples1'), s1_test)
-        np.savetxt(os.path.join(outpath, 'val_samples2'), s2_test)
+        np.savetxt(os.path.join(outpath, 'val_samples1'), s1_val)
+        np.savetxt(os.path.join(outpath, 'val_samples2'), s2_val)
+        np.savetxt(os.path.join(outpath, 'test_samples1'), s1_test)
+        np.savetxt(os.path.join(outpath, 'test_samples2'), s2_test)
 
         
 
@@ -104,7 +110,8 @@ def generate_sample_datafiles(processed_data, outpath, type1, type2, val_fractio
     np.savetxt(os.path.join(outpath, 'train_samples1'), s1_train)
     np.savetxt(os.path.join(outpath, 'train_samples2'), s2_train)
 
-    return (len(s1_train), len(s1_test) if val_fraction > 0 else 0, len(s2_train), len(s2_test) if val_fraction > 0 else 0)
+    return (len(s1_train), len(s1_val) if val_fraction > 0 else 0, len(s1_test) if val_fraction > 0 else 0, 
+        len(s2_train), len(s2_val) if val_fraction > 0 else 0, len(s2_test) if val_fraction > 0 else 0)
    
 """
 config values
@@ -176,9 +183,9 @@ for type1 in cell_types:
 
         
         data['distrib1']['sample_size'] = sample_sizes[0]
-        data['distrib2']['sample_size'] = sample_sizes[2]
+        data['distrib2']['sample_size'] = sample_sizes[3]
         data['distrib1']['test_sample_size'] = sample_sizes[1]
-        data['distrib2']['test_sample_size'] = sample_sizes[3]
+        data['distrib2']['test_sample_size'] = sample_sizes[4]
         data['distrib1']['cluster'] = type1
         data['distrib2']['cluster'] = type2
 
@@ -186,6 +193,8 @@ for type1 in cell_types:
         data['distrib2']['path_train'] = os.path.join(path_to_save_processed, 'train_samples2')
         data['distrib1']['path_val'] = os.path.join(path_to_save_processed, 'val_samples1')
         data['distrib2']['path_val'] = os.path.join(path_to_save_processed, 'val_samples2')
+        data['distrib1']['path_test'] = os.path.join(path_to_save_processed, 'test_samples1')
+        data['distrib2']['path_test'] = os.path.join(path_to_save_processed, 'test_samples2')
 
         #write new config file
         with open(config_To_be_written, "w") as write_file:

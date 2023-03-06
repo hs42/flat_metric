@@ -75,7 +75,7 @@ lnets
 We strived to put as many variables as we could in a single configuration (json) file for each experiment. 
 Sample configuration files exist under:
 * `lnets/tasks/adversarial/configs`: for adversarial robustness experiments.
-* `lnets/tasks/classification/configs`: for classification experimnts.
+* `lnets/tasks/classification/configs`: for classification experiments.
 * `lnets/tasks/dualnets/configs`: for Wasserstein distance estimation experiments. 
 * `lnets/tasks/gan/configs`: for training GANs. 
 

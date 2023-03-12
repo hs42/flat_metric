@@ -6,10 +6,12 @@ import warnings
 import tkinter as tk
 from tkinter.filedialog import askdirectory
 import tempfile
+import sys
 
 
 __basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
 __filedir__ = os.path.dirname(os.path.abspath(__file__))
+
 
 """
 quick / most important parameters
@@ -44,7 +46,6 @@ out_path_parent = askdirectory(title='Select empty folder for the output of this
 if len(os.listdir(out_path_parent)) != 0:
     raise RuntimeError('output directory is not empty. Please choose another one', out_path_parent)
 out_path = os.path.join(out_path_parent, 'training')
-out_path_results = os.path.join(out_path_parent, 'results')
 
 
 """

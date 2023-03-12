@@ -27,7 +27,9 @@ To install, you need to:
 2. Enter a R console and enter 
 
 	if (!require("BiocManager", quietly = TRUE))
+
 	    install.packages("BiocManager")
+
 	BiocManager::install("splatter")
 
 I had the problem that my R version was not the newest one, so I had to install an older version of the BiocManager, which was appropriate to my version of R. See also https://bioconductor.org/about/release-announcements/ for a full list of old versions.

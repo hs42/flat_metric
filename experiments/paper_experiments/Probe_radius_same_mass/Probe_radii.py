@@ -1,3 +1,9 @@
+"""
+This is the script to reproduce the Experiments - Testing the effect of the supports section of the paper.
+Compute the flat distance between mu sitting at zero (mu=sample_size * delta(0)) and nu, which describes a 
+sphere of radius r. R is changed to the values specified in radii_to_test
+"""
+
 import json
 import numpy as np
 import subprocess

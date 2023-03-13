@@ -28,7 +28,7 @@ else:
     sample_size = 30 * 2**dim #account for need for more training data in higher dimensions
 
 #radii_to_test = np.arange(radius_start, radius_stop, radius_step)
-radii_to_test = [1,2]#list(np.arange(0.01, 3, 0.1)) + list(range(3,33,5)) #the radius which are to be tested in this script.
+radii_to_test = list(np.arange(0.01, 3, 0.1)) + list(range(3,33,5)) #the radius which are to be tested in this script.
 
 linear_layer_type = 'spectral_normal'
 

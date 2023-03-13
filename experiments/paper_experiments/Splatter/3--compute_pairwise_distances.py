@@ -156,7 +156,7 @@ config_To_be_written = os.path.join(path_to_save_processed, 'single_cell_compari
 #ask user where the training results shall be strored
 root = tk.Tk()
 root.withdraw()
-out_path_parent = askdirectory(title='Select folder for the output of this experiment', initialdir=os.path.join(__basedir__, 'out'))
+out_path_parent = askdirectory(title='Select empty folder for the output of this experiment', initialdir=os.path.join(__basedir__, 'out'))
 # if out_path already exists from a previous experiment
 if len(os.listdir(out_path_parent)) != 0:
     raise RuntimeError('output directory is not empty. Please choose another one', out_path_parent)

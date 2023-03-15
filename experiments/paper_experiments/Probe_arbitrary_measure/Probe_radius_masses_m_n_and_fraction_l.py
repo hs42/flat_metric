@@ -12,10 +12,6 @@ rounded value of l_f * n) - thus we need to compute it given the
 speific data at hand for this run. The computed ground truth will be stored in a np array, which will be written to a file after all runs took place.
 """
 
-
-__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
-__filedir__ = os.path.dirname(os.path.abspath(__file__))
-
 import json
 import numpy as np
 import subprocess
@@ -26,6 +22,12 @@ import tkinter as tk
 from tkinter.filedialog import askdirectory
 import tempfile
 import sys
+import shutil
+
+__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
+__filedir__ = os.path.dirname(os.path.abspath(__file__))
+
+
 
 sys.path.append(os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}distrib'.format(s=os.sep)))
 import sum_of_Diracs
@@ -55,6 +57,7 @@ else:
 m_to_test = sample_size_factor*np.array([5, 10, 20], dtype=int)
 n_to_test = sample_size_factor*np.array([10, 20, 30, 40, 50, 60, 70, 80], dtype=int)
 l_fractions_to_test = np.arange(0, 1.1, 0.1)
+
 
 linear_layer_type = 'spectral_normal'
 
@@ -165,11 +168,11 @@ for m_i, m in enumerate(m_to_test):
             
             subprocess.call("python " + os.path.join(__basedir__, "lnets", "tasks", "dualnets", "mains","train_dual.py") + " " + config_To_be_written, shell=True)
 
-#save ground truth
+#save ground truth. It will be read in by the visualizing script
 np.save(os.path.join(out_results, 'groundtruth'), groundtruth)
 
 
 #cleanup
 tempdir.cleanup()
-sys.remove.append(os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}distrib'.format(s=os.sep)))
+sys.path.remove(os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}distrib'.format(s=os.sep)))
 

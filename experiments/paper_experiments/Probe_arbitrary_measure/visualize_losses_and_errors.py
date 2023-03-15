@@ -26,7 +26,7 @@ plot_uncertainties_par = {False: 0, True: 1}[plot_uncertainties]#convert boolean
 def init():
     root = tk.Tk()
     root.withdraw()
-    ppath = askdirectory(title='Select parent folder containing the out files of a \'Probe against arbitrary measure\'-experiment, \
+    path = askdirectory(title='Select parent folder containing the out files of a \'Probe against arbitrary measure\'-experiment, \
         where the subfolders for many and few datapoints are stored', initialdir=os.path.join(__basedir__, 'out'))
 
     tmp = os.listdir(path)
@@ -132,7 +132,7 @@ def rearrange_data_to_make_it_plottable(path, distance_estimates, actual_penalti
     relative_errors_ratios_plot = np.zeros((len(unique_m) * len(unique_n), len(unique_l_f)))
     ratio_n_to_m = np.zeros(len(unique_m) * len(unique_n))
 
-    groundtruth = np.load(path + os.sep + 'groundtruth.npy')
+    groundtruth = np.load(os.path.join(path, os.pardir, os.pardir, os.pardir, 'results', 'groundtruth.npy'))
 
 
     print('Rearranging data ...')

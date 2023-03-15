@@ -266,3 +266,4 @@ results.to_csv(os.path.join(out_path_results, 'results_comparison_{a}.csv'.forma
 
 #clean up
 tempdir.cleanup()
+sys.path.remove(os.path.join(__basedir__, 'lnets', 'tasks', 'dualnets', 'mains'))

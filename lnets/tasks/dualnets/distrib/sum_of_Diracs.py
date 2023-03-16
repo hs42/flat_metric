@@ -6,6 +6,14 @@ from lnets.tasks.dualnets.distrib.base_distrib import BaseDistrib
 import multi_spherical_shell
 
 class Sum_of_Diracs_with_different_radii(BaseDistrib):
+    """
+    This class provides a way to generate an uniform distribution as used in the "Testing unequal masses and dropping the
+    assumptions on the support" experiment. More specifically,
+    the data points will first be generated on a dim-dimensional sphere, after which each data point will be scaled
+    radially with a factor r_i or r_o_outside such that they lie in a ball of radius 200 around the origin. In doing so,
+    it is ensured that a fraction of l_fraction of those will lie within a radius of 2, such that one can analyze the effects
+    of transport vs deletion/creation of probability mass in the unbalanced optimal transport problem.
+    """
     def __init__(self, config):
         super(Sum_of_Diracs_with_different_radii, self).__init__(config)
 
@@ -19,6 +27,10 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         assert self.dim > 0, "Dimensionality must be larger than 0. " 
 
     def __call__(self, size):
+        """
+        The __call__ method will produce size many samples of the distribution. l_fraction*mass (rounded) many of these will lie in a radius of 2, the other
+        ones will lie in a radius of at maximum 200
+        """
 
         self.m = size
         #print("In call fct der Distrb: ",  size - self.l)
@@ -41,6 +53,10 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         return samples
 
     def get_groundtruth(self, size_other_distr):
+        """
+        Computes the ground truth for this particular distribution (set of data points) according to eq (5.3) in the paper.
+        For this, we need to know the masses of mu, nu and the actual value for l (not the fraction, but the absolute number of samples within radius 2)
+        """
         radii_to_sum_up = np.sort(self.r_i)
         up_to = min(self.l, size_other_distr)
 

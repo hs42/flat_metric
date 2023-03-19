@@ -8,7 +8,7 @@ plt.interactive(False)
 
 from lnets.utils.config import process_config
 
-from lnets.tasks.dualnets.distrib.load_distrib import load_distrib
+from lnets.data.load_distrib import load_distrib
 from lnets.data.load_data import load_data
 
 from lnets.trainers.trainer import Trainer

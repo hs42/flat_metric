@@ -5,11 +5,8 @@ import numpy as np
 from torch.utils.data import Subset, DataLoader
 import torchvision.datasets as datasets
 
-from lnets.data.data_transforms import get_data_transforms
-from lnets.data.utils import load_indices
-
-from lnets.tasks.dualnets.mains.custom_dataset import *
-from lnets.tasks.dualnets.distrib.load_distrib import DistribLoader
+from lnets.tasks.data.custom_dataset import *
+from lnets.tasks.data.load_distrib import DistribLoader
 
 
 class linked_samples(DistribLoader):
@@ -133,7 +130,7 @@ def load_data(cfg):
 
     Returns a dictionary of linked_samples objects, each of which will yield tuples of the form 
     (samples from distribution 1, samples from distribution 2). This is consistent with the usage of load_distrib() in 
-    lnets/tasks/dualnets/distrib/load_distrib.py such that both methods can be used without changing the syntax in
+    lnets/data/load_distrib.py such that both methods can be used without changing the syntax in
     training routine lnets/tasks/dualnets/main/train_dual.py 
 
     In contrast to the load_distrib() method, the load_data() function relies on a text file of data being specified.

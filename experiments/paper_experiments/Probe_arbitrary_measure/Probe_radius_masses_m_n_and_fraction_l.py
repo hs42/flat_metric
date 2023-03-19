@@ -80,7 +80,7 @@ groundtruth = np.zeros((len(m_to_test), len(n_to_test), len(l_fractions_to_test)
 
 mock_paras = Munch({'dim': dim, 'center_x' : [0.0], 'l' : 0, 'l_fraction': 0.0})
 
-path_to_default =      os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}configs{s}default_2_diracs_not_in_sphere_dl.json'.format(s=os.sep))
+path_to_default =      os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}configs{s}default_datasets.json'.format(s=os.sep))
 
 tempdir = tempfile.TemporaryDirectory() #create temporary dir where text files of the the currently celltypes under question are stored
 path_to_save_processed = tempdir.name

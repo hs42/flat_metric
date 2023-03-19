@@ -1,14 +1,14 @@
 {
-  "task": "wasserstein_distance_estimation",
-  "output_root": "out/wde",
-  "exp_name": "high_dimensional_cone_experiment",
+  "task": "template for various experiments where we would like to compare distrubutions given by an external data set which will be read in under path_train",
+  "output_root": "",
+  "exp_name": "comparison of two data sets",
   "seed": 0,
   "model": {
     "pretrained_best_path": null,
-    "name": "dual_fc",
-    "activation": "group_sort",
+    "name": "dual_fc_flat",
+    "activation": "maxmin",
     "linear": {
-      "type": "bjorck",
+      "type": "spectral_normal",
       "safe_scaling": true,
       "power_iters": 2,
       "bjorck_beta": 0.5,
@@ -17,24 +17,25 @@
       "bias": true
     },
     "layers": [
-      256,
-      256,
-      256,
-      256,
-      256,
-      256,
+      64,
+      64,
       1
     ],
     "groupings": [
-      256,
-      256,
-      256,
-      256,
-      256,
-      256,
+      2,
+      2,
       1
     ],
     "l_constant": 1,
+    "bound" : {
+      "upper_bound":1,
+      "lambda_loss_start_at": 0.2,
+      "lambda_loss_stop_at": 0.5,
+      "lambda_init": 10.0,
+      "lambda_final": 10.0,
+      "lambda_coefficient": 2.0,
+      "lambda_current": 10.0
+    },
 
     "per_epoch_proj": {
       "turned_on": false,
@@ -55,21 +56,19 @@
     }
   },
   "optim": {
-    "optimizer": "aggmo",
+    "optimizer": "adam",
     "lr_schedule": {
       "name": "step",
-      "lr_init": 0.005,
+      "lr_init": 0.00001,
       "lr_decay": 0.9,
       "milestones": [
-        15,
-        30,
-        60,
-        90
+        32,
+        64
       ],
       "last_epoch": -1
     },
-    "epoch_len": 128,
-    "epochs": 150,
+    "epochs": 5000,
+    "epoch_len":1,
     "momentum": 0.9,
     "betas": [
       0.0,
@@ -82,35 +81,24 @@
       "minmax": "min"
     },
     "patience": 250,
-    "max_grad_norm": 1000
+    "max_grad_norm": 10
   },
   "distrib1": {
-    "name": "MultiSphericalShell",
-    "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 128,
-    "empty_dim": 0,
-    "num_shells": 1,
-    "radius": 0.0000001,
-    "center_x": [
-      0.0
-    ],
-    "reshape_to_grid": false,
-    "sample_size": 32,
-    "test_sample_size": 2048
+    "dim": 1,
+    "sample_size": 5,
+    "test_sample_size": 5,
+    "path_train": "",
+    "path_train": "",
+    "path_val": "",
+    "path_test": "",
   },
   "distrib2": {
-    "name": "MultiSphericalShell",
-    "filepath": "lnets/tasks/dualnets/distrib/multi_spherical_shell.py",
-    "dim": 128,
-    "empty_dim": 0,
-    "num_shells": 1,
-    "radius": 1,
-    "center_x": [
-      0.0
-    ],
-    "reshape_to_grid": false,
-    "sample_size": 32,
-    "test_sample_size": 2048
+    "dim": 1,
+    "sample_size": 5,
+    "test_sample_size": 5,
+    "path_train": "",
+    "path_val": "",
+    "path_test": "",
   },
   "visualize_2d": {
     "xrange": [
@@ -141,11 +129,17 @@
     ],
     "step": 0.02
   },
+  "visualize_logs": {
+    "losses": true,
+    "weight_orthognality": false,
+    "weight_orthognality_yrange": [0, 5]
+  },
   "logging": {
     "report_freq": 1,
     "save_model": false,
-    "save_best": false
+    "save_best": true,
+    "check_orthogonality": false
   },
-  "cuda": false,
+  "cuda": true,
   "visualize": false
 }

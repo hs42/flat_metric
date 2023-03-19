@@ -29,7 +29,7 @@ import sys
 __basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
 __filedir__ = os.path.dirname(os.path.abspath(__file__))
 
-sys.path.append(os.path.join(__basedir__, 'lnets', 'tasks', 'dualnets', 'mains'))
+sys.path.append(os.path.join(__basedir__, 'lnets', 'data'))
 
 from custom_dataset import *
 
@@ -150,7 +150,7 @@ os.makedirs(path_to_save_processed)
 path_to_raw = os.path.join(__filedir__, 'genes_splatter.csv') #read in gene UMI counts = INPUT
 
 
-path_to_default =      os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}configs{s}single_cell_data_revised.json'.format(s=os.sep)) #default architecture for the net
+path_to_default =      os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}configs{s}default_datasets.json'.format(s=os.sep)) #default architecture for the net
 config_To_be_written = os.path.join(path_to_save_processed, 'single_cell_comparison.json') #adapt it such that the correct input is given in each loop
 
 #ask user where the training results shall be strored

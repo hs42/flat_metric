@@ -1,7 +1,7 @@
 {
-  "task": "flat norm dirac less than 2",
-  "output_root": "out/FM_2_Diracs_d=2",
-  "exp_name": "flat metric between two Diracs",
+  "task": "template for various experiments where we would like to compare a Dirac at 0 and a spherical distribution",
+  "output_root": "",
+  "exp_name": "comparison of 2 Diracs",
   "seed": 0,
   "model": {
     "pretrained_best_path": null,
@@ -151,6 +151,6 @@
     "save_best": false,
     "check_orthogonality": false
   },
-  "cuda": false,
+  "cuda": true,
   "visualize": false
 }

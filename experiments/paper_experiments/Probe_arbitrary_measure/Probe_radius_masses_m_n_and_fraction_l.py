@@ -53,7 +53,6 @@ if few_samples:
 else:
     sample_size_factor = 6 * 2**dim  #account for need for more training data in higher dimensions
 
-
 m_to_test = sample_size_factor*np.array([5, 10, 20], dtype=int)
 n_to_test = sample_size_factor*np.array([10, 20, 30, 40, 50, 60, 70, 80], dtype=int)
 l_fractions_to_test = np.arange(0, 1.1, 0.1)
@@ -66,9 +65,9 @@ root = tk.Tk()
 root.withdraw()
 out_path_parent = askdirectory(title='Select empty folder for the output of this experiment', initialdir=os.path.join(__basedir__, 'out'))
 # if out_path already exists from a previous experiment
-if len(os.listdir(out_path_parent)) != 0:
-    raise RuntimeError('output directory is not empty. Please choose another one', out_path_parent)
 out_path = os.path.join(out_path_parent, 'training{s}{n}_samples{s}dimension_{d}'.format(d=dim, s=os.sep, n=['many', 'few'][few_samples]))
+if os.path.isdir(out_path) and len(os.listdir(out_path)) != 0:
+    raise RuntimeError('output directory is not empty. Please choose another one', out_path)
 out_results = os.path.join(out_path_parent, 'results')
 os.makedirs(out_results)
 
@@ -94,6 +93,7 @@ config_To_be_written = os.path.join(path_to_save_processed, '2_diracs_not_in_sph
 Read default configuration and adapt parameters
 """
 #read data
+print(path_to_default)
 with open(path_to_default) as f:
    data = json.load(f)
 

@@ -1,6 +1,6 @@
 {
   "task": "template for various experiments where we would like to compare distrubutions given by an external data set which will be read in under path_train",
-  "output_root": "",
+  "output_root": "dummy",
   "exp_name": "comparison of two data sets",
   "seed": 0,
   "model": {
@@ -87,18 +87,17 @@
     "dim": 1,
     "sample_size": 5,
     "test_sample_size": 5,
-    "path_train": "",
-    "path_train": "",
-    "path_val": "",
-    "path_test": "",
+    "path_train": "dummy",
+    "path_val": "dummy",
+    "path_test": "dummy"
   },
   "distrib2": {
     "dim": 1,
     "sample_size": 5,
     "test_sample_size": 5,
-    "path_train": "",
-    "path_val": "",
-    "path_test": "",
+    "path_train": "dummy",
+    "path_val": "dummy",
+    "path_test": "dummy"
   },
   "visualize_2d": {
     "xrange": [

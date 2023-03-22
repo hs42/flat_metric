@@ -13,6 +13,7 @@ import tkinter as tk
 from tkinter.filedialog import askdirectory
 import tempfile
 import sys
+import shutil
 
 
 __basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
@@ -26,7 +27,7 @@ use_cuda = True #whether to use GPU or not
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints
 
 dim = 5
-few_samples = True
+few_samples = False
 
 if few_samples:
     sample_size = 5 * 2**dim #account for need for more training data in higher dimensions
@@ -49,8 +50,6 @@ root = tk.Tk()
 root.withdraw()
 out_path_parent = askdirectory(title='Select empty folder for the output of this experiment', initialdir=os.path.join(__basedir__, 'out'))
 # if out_path already exists from a previous experiment
-if len(os.listdir(out_path_parent)) != 0:
-    raise RuntimeError('output directory is not empty. Please choose another one', out_path_parent)
 out_path = os.path.join(out_path_parent, 'training')
 
 
@@ -66,6 +65,8 @@ os.makedirs(path_to_save_processed)
 path_to_default =      os.path.join(__basedir__, 'lnets{s}tasks{s}dualnets{s}configs{s}default_2_diracs.json'.format(s=os.sep))
 config_To_be_written = os.path.join(tempdir.name, '2_diracs.json')
 out_path = os.path.join(out_path, '{n}_samples{s}dimension_{d}'.format(d=dim, s=os.sep, n=['many', 'few'][few_samples]))
+if os.path.isdir(out_path) and len(os.listdir(out_path)) != 0:
+    raise RuntimeError('output directory is not empty. Please choose another one', out_path)
 
 #read data
 with open(path_to_default) as f:

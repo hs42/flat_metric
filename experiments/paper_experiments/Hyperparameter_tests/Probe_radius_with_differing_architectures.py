@@ -12,6 +12,9 @@ import numpy as np
 import subprocess
 import os
 import tempfile
+import tkinter as tk
+from tkinter.filedialog import askdirectory
+import shutil
 
 __basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
 __filedir__ = os.path.dirname(os.path.abspath(__file__))

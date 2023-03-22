@@ -5,8 +5,8 @@ import numpy as np
 from torch.utils.data import Subset, DataLoader
 import torchvision.datasets as datasets
 
-from lnets.tasks.data.custom_dataset import *
-from lnets.tasks.data.load_distrib import DistribLoader
+from lnets.data.custom_dataset import *
+from lnets.data.load_distrib import DistribLoader
 
 
 class linked_samples(DistribLoader):

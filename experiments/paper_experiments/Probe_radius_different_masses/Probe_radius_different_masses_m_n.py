@@ -13,6 +13,7 @@ import os
 import tkinter as tk
 from tkinter.filedialog import askdirectory
 import tempfile
+import shutil
 import sys
 
 __basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
@@ -35,6 +36,7 @@ else:
 
 
 #radii_to_test = np.arange(radius_start, radius_stop, radius_step)
+
 radii_to_test = list(np.arange(0.01, 3, 0.3)) + list(range(3,18,5)) #the radius which are to be tested in this script.
 m_to_test = sample_size_factor*np.array([5, 10, 20], dtype=int) #the masses of measure mu to probe
 n_to_test = sample_size_factor*np.array([10, 20, 30, 40, 50, 60, 70, 80], dtype=int) #the masses of measure nu to probe
@@ -46,11 +48,11 @@ root = tk.Tk()
 root.withdraw()
 out_path_parent = askdirectory(title='Select empty folder for the output of this experiment', initialdir=os.path.join(__basedir__, 'out'))
 # if out_path already exists from a previous experiment
-if len(os.listdir(out_path_parent)) != 0:
-    raise RuntimeError('output directory is not empty. Please choose another one', out_path_parent)
+
 out_path = os.path.join(out_path_parent, 'training{s}{n}_samples{s}dimension_{d}'.format(d=dim, s=os.sep, n=['many', 'few'][few_samples]))
 
-
+if os.path.isdir(out_path) and len(os.listdir(out_path)) != 0:
+    raise RuntimeError('output directory is not empty. Please choose another one', out_path)
 
 """
 path configurations

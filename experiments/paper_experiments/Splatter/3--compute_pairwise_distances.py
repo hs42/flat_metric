@@ -130,7 +130,7 @@ save_best_model = False #whether or not to store the best model for each trainin
 model_name = "dual_fc_flat" if flat else "dual_fc"
 
 dim_PCA = 5
-cell_types = ['Group1', 'Group2' 'Group3', 'Group4', 'Group5'] #the groups which are to be analyzed. Need to match the names specified in the genes_splatter.csv file
+cell_types = ['Group1', 'Group2', 'Group3', 'Group4', 'Group5'] #the groups which are to be analyzed. Need to match the names specified in the genes_splatter.csv file
 
 linear_layer_type = 'spectral_normal'
 
@@ -266,4 +266,4 @@ results.to_csv(os.path.join(out_path_results, 'results_comparison_{a}.csv'.forma
 
 #clean up
 tempdir.cleanup()
-sys.path.remove(os.path.join(__basedir__, 'lnets', 'tasks', 'dualnets', 'mains'))
+sys.path.remove(os.path.join(__basedir__, 'lnets', 'data'))

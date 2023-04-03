@@ -8,5 +8,5 @@ The samples found here were generated using the generator for uniform distributi
 # Distribution 1
 Distribution 1 is a 5-dimensional uniform distribution, where each individual coordinate is uniform on the interval [-4, -2]; i.e. dim=5, center=-3, supportlength=1
 
-# Distribution 1
-Distribution 1 is a 5-dimensional uniform distribution, where each individual coordinate is uniform on the interval [2, 4]; i.e. dim=5, center=3, supportlength=1
+# Distribution 2
+Distribution 2 is a 5-dimensional uniform distribution, where each individual coordinate is uniform on the interval [2, 4]; i.e. dim=5, center=3, supportlength=1

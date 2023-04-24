@@ -27,14 +27,14 @@ This code implements the computation of the flat distance between two distributi
 
 # Usage
 ## General
-The code provides a means to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods and how to use them are explained in the `experiments/tutorial*` directories of this repository. 
+The code provides a means to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods are explained in the `experiments/tutorial*` directories of this repository. 
 
-Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts for visualization and re-creating the paper's plots.
+Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts re-creating the paper's plots.
 
 ## Running
-Each experiment is configured in a json file. There, the user may input which data to analyze, how many epochs to train for, how many layers to use etc. The `experiments/tutorial*` sections provide a wrapper and a break-down for the most important of these properties.
+Each experiment is configured in a json file. There, the user may input the data to be analysed, how many epochs to train for, how many layers to use, etc. The `experiments/tutorial*` sections provide a wrapper and a break-down of the most important of these properties.
 
-Afterwards, you can run start the flat distance estimation by 
+Afterwards, you can start the flat distance estimation by 
 
 ```
 python ./lnets/tasks/dualnets/mains/train_dual.py <your_experiment.json>

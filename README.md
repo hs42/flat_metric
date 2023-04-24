@@ -5,7 +5,7 @@ This code implements the computation of the flat distance between two distributi
 * Create a new conda environment and activate it:
     ```
     conda create -n fd
-    conda activate df
+    conda activate fd
     ```
     
 * Install PyTorch, following instructions in `https://pytorch.org`. 

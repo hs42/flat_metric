@@ -27,12 +27,12 @@ This code implements the computation of the flat distance between two distributi
 
 # Usage
 ## General
-The code provides a means to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods and how to use them are explained in the experiments/tutorial* directories of this repository. 
+The code provides a means to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods and how to use them are explained in the `experiments/tutorial*` directories of this repository. 
 
-Furthermore, all the experiments carried out in the paper can be found in the experiments/paper_experiments folder. There, you will also find scripts for visualization and re-creating the paper's plots.
+Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts for visualization and re-creating the paper's plots.
 
 ## Running
-Each experiment is configured in a json file. There, the user may input which data to analyze, how many epochs to train for, how many layers to use etc. The experiments/tutorial* sections provide a wrapper and a break-down for the most important of these properties.
+Each experiment is configured in a json file. There, the user may input which data to analyze, how many epochs to train for, how many layers to use etc. The `experiments/tutorial*` sections provide a wrapper and a break-down for the most important of these properties.
 
 Afterwards, you can run start the flat distance estimation by 
 
@@ -47,7 +47,7 @@ As mentioned, there are two ways in which the user may give input data. They can
 
 Alternatively, the user may specify a distribution by an analytical expression such that samples can be drawn from this law.
 
-Kindly refer to the experiments/tutorial* directories to see how to actually use both methods.
+Kindly refer to the `experiments/tutorial*` directories to see how to actually use both methods.
 
 ## A note on specifying the measures' masses
 This implementation handles the masses of the measures by taking differently many samples into account for each distribution. For instance, if distribution 1 should hold double the mass of distribution 2, then the former could be approximated by e.g. 600 data points, while the latter one only counts 300 data points. 

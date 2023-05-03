@@ -63,7 +63,7 @@ the experiment configs. In all experiments, set  `"cuda": true`.
 The original name of the root directory LNets (=Lipschitz neural Networks) was kept for compatibility reasons.
 
 Interesting directories or files include
-* `lnets/tasks/dualnets/configs`: sample json configuration file. You can find both, illustrive examples (e.g. `absolute_value_experiment.json` or `Gaussian_uniform.json`) and the default architecures used for the paper experiments (`default_*.json`)
+* `lnets/tasks/dualnets/configs`: sample json configuration file. You can find both, illustrive examples (e.g. `absolute_value_experiment.json` or `Gaussian_uniform.json`) and the default architectures used for the paper experiments (`default_*.json`)
 * `lnets/tasks/dualnets/distrib`: some generator scripts for drawing samples according to a law (e.g. Gaussian, uniform, Diracs, etc.). They can be used in the experiments by specifying them in the json files.
 * `lnets/tasks/dualnets/mains/train_dual.py`: the script which actually trains a neural network. It expects a json file containing the configuration as a parameter
 

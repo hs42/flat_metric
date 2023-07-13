@@ -8,7 +8,7 @@ This code implements the computation of the flat distance between two distributi
     conda activate fd
     ```
     
-* Install PyTorch, following instructions in `https://pytorch.org`. 
+* Install PyTorch, following instructions in [PyTorch](https://pytorch.org). 
 
 * Install torchnet by:
     ```

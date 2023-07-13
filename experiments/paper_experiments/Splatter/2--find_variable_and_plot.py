@@ -104,11 +104,11 @@ if visualize:
     red_data_df = pd.DataFrame({'tsne_1': red_data[:,0], 'tsne_2': red_data[:,1], 'label': df['cell_type'][:]})
     #red_data_df = pd.DataFrame({'PCA_1': PC_tsne[:,0], 'PCA_2': PC_tsne[:,1], 'label': df['cell_type'][:]})
     fig, ax = plt.subplots(1)
-    colors1 = ['darkgoldenrod', 'cornflowerblue', 'lawngreen', 'yellow', 'lightpink']#, 'mediumblue', 'orange', 'peru', 'deeppink']
+    colors1 = ['darkgoldenrod', 'lightpink', 'lawngreen', 'yellow', 'cornflowerblue']#, 'mediumblue', 'orange', 'peru', 'deeppink']
     colors2 = []
     sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=red_data_df, legend=False, ax=ax,s=30, palette=colors1)
     #sns.scatterplot(x='PCA_1', y='PCA_2', hue='label', data=red_data_df, legend='full', ax=ax,s=30, palette=colors1)
-    lim_x = (-60, 80)
+    lim_x = (-80, 80)
     lim_y = (-75, 65)
     #lim = (-10,10)
     ax.set_xlim(lim_x)

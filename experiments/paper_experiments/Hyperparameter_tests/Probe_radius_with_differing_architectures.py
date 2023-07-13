@@ -26,7 +26,7 @@ dim = 4
 few_samples = True
 
 
-use_cuda = True #whether to use GPU or not
+use_cuda = False #whether to use GPU or not
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints
 
 
@@ -92,8 +92,9 @@ data['distrib2']['sample_size'] = int(n)
 data['distrib1']['test_sample_size'] = max(1,int(0.1*m))
 data['distrib2']['test_sample_size'] = max(1,int(0.1*n))
 
+data['cuda'] = use_cuda
+
 linear_layer_type = 'spectral_normal'
-epochs = 2000
 layers = [] #the hidden layers. List of number of respective neurons
 activation = 'group_sort'
 groupings = [] #the number of neurons in each hidden layer used for calculating the GroupSort activation function. 
@@ -120,25 +121,21 @@ for i in range(6):
         linear_layer_type = 'spectral_normal'
         layers = [128, 128, 128, 128, 128, 1]
         groupings = [2, 2, 2, 2, 2, 1]
-        epochs = 10000
     elif i == 3:
         #make layers bigger
         linear_layer_type = 'spectral_normal'
         layers = [512, 512, 1]
         groupings = [8, 8, 1]
-        epochs = 10000
     elif i == 4:
         #make net deeper, add more training time, switch to Bjorck
         linear_layer_type = 'bjorck'
         layers = [128, 128, 128, 128, 128, 1]
         groupings = [2, 2, 2, 2, 2, 1]
-        epochs = 10000
     elif i == 5:
         #make layers bigger, switch to Bjorck
         linear_layer_type = 'bjorck'
         layers = [512, 512, 1]
         groupings = [8, 8, 1]
-        epochs = 10000
 
 
     data['model']['linear']['type'] = linear_layer_type

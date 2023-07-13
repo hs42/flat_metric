@@ -125,7 +125,7 @@ config values
 
 flat = True #if false, will use usual Wasserstein computation instead of flat metric
 
-use_cuda = True #whether to use GPU or not
+use_cuda = False #whether to use GPU or not
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints'
 model_name = "dual_fc_flat" if flat else "dual_fc"
 

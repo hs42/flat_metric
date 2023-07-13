@@ -68,7 +68,7 @@
       ],
       "last_epoch": -1
     },
-    "epochs": 2000,
+    "epochs": 10000,
     "epoch_len": 1,
     "momentum": 0.9,
     "betas": [

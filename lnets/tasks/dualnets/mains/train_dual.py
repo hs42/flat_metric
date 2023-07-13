@@ -114,7 +114,8 @@ def train_dualnet(model, loaders, config):
         #type(state['model'].meters['loss']) is torchnet.meter.averagevaluemeter.AverageValueMeter -> builds average automatically
 
         print("\t\t\tTraining loss: {:.4f}".format(state['model'].meters['loss'].value()[0]))
-        print("\t\t\tDistance estimate: {:.4f}".format( - state['model'].meters['loss_W'].value()[0]))
+        if('loss_W' in state):
+            print("\t\t\tDistance estimate: {:.4f}".format( - state['model'].meters['loss_W'].value()[0]))
         
 
         #save most recent distance estimate, if it exists on its own

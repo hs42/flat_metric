@@ -111,6 +111,7 @@ x_label_list = [f'{r0:.1f}' for r0 in r[r_index_to_befin_plotting:]]
 """
 bring data in format to be plotted. This essentially means computing the relative errors and shuffling the data so we end up with arrays, which we can put into plt.imshow
 """
+
 for k, dim in enumerate(dims):
     for l, key in enumerate(flat_metric):
         relative_error[k+l*len(dims),r_index_to_befin_plotting:, 0] = - 1 + flat_metric[key][k, r_index_to_befin_plotting:,0] / truth_y[r_index_to_befin_plotting:]

@@ -152,7 +152,7 @@
     "save_best": false,
     "check_orthogonality": false
   },
-  "cuda": true,
+  "cuda": false,
   "visualize": false
 }
 

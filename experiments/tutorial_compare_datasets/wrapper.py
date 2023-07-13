@@ -18,11 +18,14 @@ import subprocess
 import os
 import numpy as np
 
+__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir)
+__file_dir__ =os.path.dirname(os.path.abspath(__file__))
+
 """
 Firstly, read in the configuration file
 """
 #read data
-with open('default_datasets.json') as f:
+with open(os.path.join(__file_dir__, 'default_datasets.json')) as f:
    data = json.load(f)
 
 """
@@ -36,7 +39,6 @@ Most important parameters
 """
 
 #specify where the training data should be saved
-__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir)
 out_path = os.path.join(__basedir__, 'out', 'compare_datasets')
 data['output_root'] = out_path #save to config
 
@@ -55,22 +57,22 @@ Specify distributions
 #computing the flat distance is futile and will yield no meaninful insight.
 
 #specify distribution 1
-data['distrib1']['path_train'] = os.path.join('data', 'train_samples_1') #specify where the training data file can be found
+data['distrib1']['path_train'] = os.path.join(__file_dir__, 'data', 'train_samples_1') #specify where the training data file can be found
 data['distrib1']['sample_size'] = 300 #how many samples to consider
 
-data['distrib1']['path_val'] = os.path.join('data', 'val_samples_1') #Optional - where data for validation after each epoch can be found. Can be left empty
+data['distrib1']['path_val'] = os.path.join(__file_dir__, 'data', 'val_samples_1') #Optional - where data for validation after each epoch can be found. Can be left empty
 data['distrib1']['test_sample_size'] = 50 #how many samples should be used for testing
 
-data['distrib1']['path_test'] = os.path.join('data', 'test_samples_1') #Optional - where data for testing after all of the training. Can be left empty
+data['distrib1']['path_test'] = os.path.join(__file_dir__, 'data', 'test_samples_1') #Optional - where data for testing after all of the training. Can be left empty
 
 #specify distribution 2
-data['distrib2']['path_train'] = os.path.join('data', 'train_samples_2') #specify where the training data file can be found
+data['distrib2']['path_train'] = os.path.join(__file_dir__, 'data', 'train_samples_2') #specify where the training data file can be found
 data['distrib2']['sample_size'] = 120 #how many samples to consider
 
-data['distrib2']['path_val'] = os.path.join('data', 'val_samples_2') #Optional - where data for validation after each epoch can be found. Can be left empty
+data['distrib2']['path_val'] = os.path.join(__file_dir__, 'data', 'val_samples_2') #Optional - where data for validation after each epoch can be found. Can be left empty
 data['distrib2']['test_sample_size'] = 20 #how many samples should be used for testing
 
-data['distrib2']['path_test'] = os.path.join('data', 'test_samples_2') #Optional - where data for testing after all of the training. Can be left empty
+data['distrib2']['path_test'] = os.path.join(__file_dir__, 'data', 'test_samples_2') #Optional - where data for testing after all of the training. Can be left empty
 
 #Note: a few hundred datapoints are most often rather too little to train a neural network on 5-dimensional input data. We remedied this by reducing the
 #size of the network. In the default config it possess two hidden layers of 64 neurons each. You may want to play around with that yourself to get a feeling
@@ -79,7 +81,7 @@ data['distrib2']['path_test'] = os.path.join('data', 'test_samples_2') #Optional
 """
 Misc parameters
 """
-use_cuda = True #whether to use GPU or not
+use_cuda = False #whether to use GPU or not
 data['cuda'] = use_cuda
 
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints

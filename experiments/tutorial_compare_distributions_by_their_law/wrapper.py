@@ -16,13 +16,15 @@ import subprocess
 import os
 import numpy as np
 
+__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir)
+__file_dir__ =os.path.dirname(os.path.abspath(__file__))
+
 """
 Firstly, read in the configuration file
 """
 #read data
-with open('Gaussian_uniform.json') as f:
+with open(os.path.join(__file_dir__, 'Gaussian_uniform.json')) as f:
    data = json.load(f)
-
 """
 Adapt parameters.
 The json file specifies all finer points needed for training. In the following, we will adapt the most important of those parameters.
@@ -34,7 +36,6 @@ Most important parameters
 """
 
 #specify where the training data should be saved
-__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir)
 out_path = os.path.join(__basedir__, 'out', 'compare_laws')
 data['output_root'] = out_path #save to config
 
@@ -45,7 +46,7 @@ data['output_root'] = out_path #save to config
 #Note that the sample_size property is the way we encode different masses. I.e. if dist1 has sample_size=100 but dist2 has
 #sample_size=300, then dist3 is made to have three times the probability mass of dist1
 data['distrib1']['name'] = 'Gauss'
-data['distrib1']['filepath'] = 'lnets/tasks/dualnets/distrib/Gauss.py' #note this is relative to the base directory, from where the process will be started later on
+data['distrib1']['filepath'] = os.path.join(__basedir__, 'lnets', 'tasks', 'dualnets', 'distrib', 'Gauss.py') #note this is usually relative to the base directory, from where the process will be started later on
 
 data['distrib1']['dim'] = 1 #dimensionality of the normal distrubtion. This parameter will be read by the 'Gauss' generator class
 data['distrib1']['sigma'] = 1#std of the normal distrubtion. This parameter will be read by the 'Gauss' generator class
@@ -56,7 +57,7 @@ data['distrib1']['test_sample_size'] = 50 #how many samples should be used for t
 
 #specify distribution 2
 data['distrib2']['name'] = 'Uniform'
-data['distrib2']['filepath'] = 'lnets/tasks/dualnets/distrib/uniform.py' #note this is relative to the base directory, from where the process will be started later on
+data['distrib2']['filepath'] = os.path.join(__basedir__, 'lnets', 'tasks', 'dualnets', 'distrib', 'uniform.py') #note this is usually relative to the base directory, from where the process will be started later on
 
 data['distrib2']['dim'] = 1 #dimensionality of the uniform distrubtion. This parameter will be read by the 'Uniform' generator class
 data['distrib2']['supportlength'] = 2#length of the interval, where we have a non-vanishing PDF. This parameter will be read by the 'Uniform' generator class
@@ -69,7 +70,7 @@ data['distrib2']['test_sample_size'] = 25 #how many samples should be used for t
 """
 Misc parameters
 """
-use_cuda = True #whether to use GPU or not
+use_cuda = False #whether to use GPU or not
 data['cuda'] = use_cuda
 
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints

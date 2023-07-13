@@ -139,6 +139,6 @@
     "save_best": true,
     "check_orthogonality": false
   },
-  "cuda": true,
+  "cuda": false,
   "visualize": false
 }

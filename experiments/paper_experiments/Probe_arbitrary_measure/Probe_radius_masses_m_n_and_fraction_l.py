@@ -36,7 +36,7 @@ import sum_of_Diracs
 '''
 quick / most important parameters
 '''
-use_cuda = True #whether to use GPU or not
+use_cuda = False #whether to use GPU or not
 save_best_model = False #whether or not to store the best model for each training. These will be stored in the training output directory under 'checkpoints
 
 dim = 2 #the dimension of the sphere on which the points should be sampled

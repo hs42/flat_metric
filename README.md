@@ -24,6 +24,7 @@ This code implements the computation of the flat distance between two distributi
     ```
     export PYTHONPATH="${PYTHONPATH}:`pwd`"
     ``` 
+    Usually, you want to add such an export of the enviromtal variable to your `.bashrc` file such that you don't have to re-run this command after every reboot.
 
 # Usage
 ## General
@@ -32,15 +33,20 @@ The code provides a way to compute the flat distance between two distributions. 
 Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts re-creating the paper's plots.
 
 ## Running
-Each experiment is configured in a json file. There, the user may input the data to be analysed, how many epochs to train for, how many layers to use, etc. The `experiments/tutorial*` sections provide a wrapper and a break-down of the most important of these properties.
+Each experiment is configured in a json file. There, the user may input the data to be analysed, how many epochs to train for, how many layers to use, etc. The `experiments/tutorial*` sections provide a wrapper and a break-down of the most important of these properties. To get started, run for instance
 
-Afterwards, you can start the flat distance estimation by 
+
+```
+python ./experiments/tutorial_compare_datasets/wrapper.py
+```
+
+If you configured your own experiment (and provided your own data files or distributions), you can start the estimation by
 
 ```
 python ./lnets/tasks/dualnets/mains/train_dual.py <your_experiment.json>
 ```
 
-In all of our paper scripts, this is invoked in wrapper scripts corresponding to the respective experiments.
+In all of our paper scripts, this line is invoked in wrapper scripts corresponding to the respective experiments.
 
 ## Specifying input distributions
 As mentioned, there are two ways in which the user may give input data. They can either simply provide a text file containing the data set (2 files for the 2 distributions in question). This is especially useful when analyzing experimental data; just make sure that the files are readable by np.loadtxt().
@@ -56,7 +62,9 @@ This is configured as the "sample_size" entries in the corresponding .json file.
 
 ## Running on GPU
 If a GPU is available, we strongly encourage the users to turn on GPU training by turning on the related json field in
-the experiment configs. In all experiments, set  `"cuda": true`.
+the experiment configs. In all experiments, set  `"cuda": true` or the `use_cuda = True` flag in the wrapper scripts.
+
+By default, GPU support is disabled such that the user does not run into errors if their graphics card is not supported by Torch.
 
 
 # File structure

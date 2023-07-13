@@ -27,7 +27,7 @@ This code implements the computation of the flat distance between two distributi
 
 # Usage
 ## General
-The code provides a means to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods are explained in the `experiments/tutorial*` directories of this repository. 
+The code provides a way to compute the flat distance between two distributions. Generally, these distributions are specified either by their law or by empirical samples (i.e. datasets). Both methods are explained in the `experiments/tutorial*` directories of this repository. 
 
 Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts re-creating the paper's plots.
 
@@ -60,10 +60,10 @@ the experiment configs. In all experiments, set  `"cuda": true`.
 
 
 # File structure
-The original name of the root directory LNets (=Lipschitz neurla Networks) was kept for compatibility reasons.
+The original name of the root directory LNets (=Lipschitz neural Networks) was kept for compatibility reasons.
 
 Interesting directories or files include
-* `lnets/tasks/dualnets/configs`: sample json configuration file. You can find both, illustrive examples (e.g. `absolute_value_experiment.json` or `Gaussian_uniform.json`) and the default architecures used for the paper experiments (`default_*.json`)
+* `lnets/tasks/dualnets/configs`: sample json configuration file. You can find both, illustrive examples (e.g. `absolute_value_experiment.json` or `Gaussian_uniform.json`) and the default architectures used for the paper experiments (`default_*.json`)
 * `lnets/tasks/dualnets/distrib`: some generator scripts for drawing samples according to a law (e.g. Gaussian, uniform, Diracs, etc.). They can be used in the experiments by specifying them in the json files.
 * `lnets/tasks/dualnets/mains/train_dual.py`: the script which actually trains a neural network. It expects a json file containing the configuration as a parameter
 

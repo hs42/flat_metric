@@ -33,7 +33,7 @@ The code provides a way to compute the flat distance between two distributions. 
 Furthermore, all the experiments carried out in the paper can be found in the `experiments/paper_experiments` folder. There, you will also find scripts re-creating the paper's plots.
 
 ## Running
-Each experiment is configured in a json file. There, the user may input the data to be analysed, how many epochs to train for, how many layers to use, etc. The `experiments/tutorial*` sections provide a wrapper and a break-down of the most important of these properties. To get started, run for instance
+Each experiment is configured in a json file. There, the user may input the data to be analyzed, how many epochs to train for, how many layers to use, etc. The `experiments/tutorial*` sections provide a wrapper and a break-down of the most important of these properties. To get started, run for instance
 
 
 ```
@@ -55,7 +55,7 @@ Alternatively, the user may specify a distribution by an analytical expression s
 
 Kindly refer to the `experiments/tutorial*` directories to see how to actually use both methods.
 
-## A note on specifying the measures' masses
+## A note on specifying the masses of the measures
 This implementation handles the masses of the measures by taking differently many samples into account for each distribution. For instance, if distribution 1 should hold double the mass of distribution 2, then the former could be approximated by e.g. 600 data points, while the latter one only counts 300 data points. 
 
 This is configured as the "sample_size" entries in the corresponding .json file. For input via the dataset file this number should simply match the number of individual data points contained in the data set (if you measured 300 cells then chances are that the distribution you want to analyze corresponds to this amount).

@@ -190,12 +190,12 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     x_label_list = x_label_list[r_start:]
 
 
-    plt.rc('axes', labelsize=16) #fontsize of the x and y labels
+    plt.rc('axes', labelsize=18) #fontsize of the x and y labels
 
     img = []
 
     print('Plotting data ...')
-
+    titlesize = 18
     for k in range(len(unique_m)):
         img.append(ax[k,0].imshow(relative_errors_plot[k,:,r_start:,plot_uncertainties_par], vmin=min_err, vmax=max_err))#, vmin=0.0, vmax=2.0))# extent=[0,n_ax,0,n_ax], vmin=0, vmax=2,  cmap='hot'))
         img.append(ax[k,1].imshow(penalties_plot[k,:,r_start:,plot_uncertainties_par], vmin=min_penalty, vmax=max_penalty))#, extent=[0,n_ax,0,n_ax], vmin=min_penalty, vmax=max_penalty,  cmap='hot'))
@@ -205,15 +205,15 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
                     True: r'Uncertainty $\Delta(\hat{\rho}_F/\rho_F-1)$' + ' for $m={m}$'.format(m=unique_m[k])}
         title2 = {False: r'Bound penalties $\mathcal{L}_b$' + ' for $m={m}$'.format(m=unique_m[k]),
                     True: r'Uncertainty $\Delta\mathcal{L}_b$' + ' for $m={m}$'.format(m=unique_m[k])}
-        ax[k,0].set_title(title1[plot_uncertainties])
-        ax[k,1].set_title(title2[plot_uncertainties])
+        ax[k,0].set_title(title1[plot_uncertainties], fontsize=titlesize)
+        ax[k,1].set_title(title2[plot_uncertainties], fontsize=titlesize)
 
         for j in range(2): #set axis labels
             #ax[k,j].set_xticks(np.arange(len(unique_n)) + 0.5)
             ax[k,j].set_yticks(np.arange(len(unique_n)) + 0.0)
             ax[k,j].set_yticklabels(unique_n)
             ax[k,j].set_ylabel(r'$n$')
-            ax[k,j].set_xlabel(r'$r_0$')
+            ax[k,j].set_xlabel(r'$r_0$', fontsize=18)
             ax[k,j].set_xticklabels(x_label_list)#[::5] + x_label_list[-2:-1])
             ax[k,j].set_xticks(np.arange(len(x_label_list)))
     
@@ -236,13 +236,13 @@ def plot(distance_estimates, relative_errors, actual_penalties, r_values, m_valu
     fig2.colorbar(img2)
 
     
-    path_to_save = asksaveasfile(mode='w', defaultextension=".png")
+    path_to_save = asksaveasfile(mode='w', defaultextension=".eps")
     if path_to_save is not None: # asksaveasfile return `None` if dialog closed with "cancel".
         tmp = {False: '', True: '_uncertainties'}[plot_uncertainties]
 
         #truncate by name[:-4] to remove '.png' provided by user (we add it later on). Do this such that we can squeeze in a '_uncertainties' if need to in the filename
-        fig.savefig(path_to_save.name[:-4] + tmp + '.png', format='PNG', dpi=300, bbox_inches = "tight")
-        fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.png', format='PNG', dpi=300, bbox_inches = "tight")
+        fig.savefig(path_to_save.name[:-4] + tmp + '.eps', format='EPS', bbox_inches = "tight")
+        fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.eps', format='EPS', bbox_inches = "tight")
     path_to_save.close()
     
 

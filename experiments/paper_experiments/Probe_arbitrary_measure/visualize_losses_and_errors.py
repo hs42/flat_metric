@@ -228,8 +228,8 @@ def plot(path, distance_estimates, actual_penalties, l_fraction_values, m_values
     if path_to_save is not None: # asksaveasfile return `None` if dialog closed with "cancel".
         tmp = {False: '', True: '_uncertainties'}[plot_uncertainties]
         #truncate by name[:-4] to remove '.png' provided by user (we add it later on). Do this such that we can squeeze in a '_uncertainties' if need to in the filename
-        fig.savefig(path_to_save.name[:-4] + tmp + '.png', format='PNG', dpi=300, bbox_inches = "tight")
-        fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.png', format='PNG', dpi=300, bbox_inches = "tight")
+        fig.savefig(path_to_save.name[:-4] + tmp + '.eps', format='EPS', bbox_inches = "tight")
+        fig2.savefig(path_to_save.name[:-4] + tmp + '_ratio.eps', format='EPS', bbox_inches = "tight")
     path_to_save.close()
     #os.remove(path_to_save.name) #remove file stub (asksaveasfile will create empty file; will not be used as file name is altered by the tmp string)
 

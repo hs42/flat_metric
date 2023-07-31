@@ -14,14 +14,14 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
     it is ensured that a fraction of l_fraction of those will lie within a radius of 2, such that one can analyze the effects
     of transport vs deletion/creation of probability mass in the unbalanced optimal transport problem.
     """
-    def __init__(self, config):
+    def __init__(self, config, size):
         super(Sum_of_Diracs_with_different_radii, self).__init__(config)
 
         self.dim = config.dim
         self.center_x = config.center_x
         self.l = config.l
         self.l_fraction = config.l_fraction
-        self.m = 0
+        self.m = size
         self.r_i = np.zeros(self.l)
 
         assert self.dim > 0, "Dimensionality must be larger than 0. " 
@@ -32,7 +32,8 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         ones will lie in a radius of at maximum 200
         """
 
-        self.m = size
+        if size != self.m:
+            raise RuntimeError('The given sample size does not equal the sample size with which this instance was initialized. This will yield errors in the ground truth computation')
         #print("In call fct der Distrb: ",  size - self.l)
         self.r_i = np.random.uniform(0.0, 2.0, self.l)
         r_i_outside = np.random.uniform(2.0, 200.0, size - self.l)
@@ -63,5 +64,11 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         term1 = np.sum(radii_to_sum_up[0:up_to])
         term2 = np.abs(self.l - size_other_distr)
         term3 = self.m - self.l
+
+
+        if term1 == 0:
+            #When the radii are not yet set because the __call__ method wasnt called yet, cant compute the ground truth
+            raise RuntimeError('Wanted to compute the ground truth before the necessary data points were sampled.')
+        
 
         return (term1 + term2 + term3) / min(size_other_distr, self.m) #to make comparable with our estimate which normalizes by min(n,m)

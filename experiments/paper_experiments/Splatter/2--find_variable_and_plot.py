@@ -137,4 +137,4 @@ if visualize:
 
         txts.append(txt)
 
-    fig.savefig('tSNE_splatter.png', format='PNG', dpi=300,  bbox_inches='tight')
+    fig.savefig('tSNE_splatter.eps', format='EPS',  bbox_inches='tight')

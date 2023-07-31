@@ -142,7 +142,6 @@ for i in range(6):
     data['model']['layers'] = layers
     data['model']['groupings'] = groupings
     data['model']['activation'] = activation
-    data['optim']['epochs'] = epochs
 
 
     out_path2 = os.path.join(out_path, 'study_case_'+str(i))

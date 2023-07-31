@@ -36,6 +36,7 @@ if not os.path.exists(os.path.join(path, 'many_samples')):
 
 tmp = os.listdir(os.path.join(path, 'many_samples'))
 tmp.sort()
+#tmp = ['dimension_1', 'dimension_5', 'dimension_10']
 
 n_r = len(os.listdir(os.path.join(path, 'many_samples', tmp[0])))
 #Assume that in each for each scenaria we conisder same dimensions and probed r values
@@ -144,20 +145,21 @@ for i in range(2):
             im = axs[i,j].imshow(actual_penalties_to_plot[:,r_index_to_befin_plotting:,j], vmin=minbound[j], vmax=maxbound[j])
         axs[i,j].set_xticklabels(x_label_list[::5])
         axs[i,j].set_xticks(np.arange(len(x_label_list))[::5])
-        axs[i,j].set_xlabel(r'$r_0$')
+        axs[i,j].set_xlabel(r'$r_0$', fontsize = 15)
         axs[i,j].set_yticklabels(y_label_list)
         axs[i,j].set_yticks(np.arange(len(y_label_list)))
+        axs[i,j].tick_params(axis='x', which='major', labelsize=15)
         divider = make_axes_locatable(axs[i,j])
         cax = divider.append_axes('right', size='5%', pad=0.05)
         fig.colorbar(im, cax=cax, orientation='vertical')
 
-  
-axs[0,1].set_title(r'Uncertainties of these relative errors $\Delta(\hat{\rho}_F/\rho_F-1)$')
+titlesize = 20  
+axs[0,1].set_title(r'The elative errors´ uncertainties $\Delta(\hat{\rho}_F/\rho_F-1)$', fontsize=titlesize)
 
-axs[0,0].set_title(r'Relative error $\hat{\rho}_F/\rho_F-1$')
-axs[1,0].set_title(r'Bound penalties $\mathcal{L}_b$')
+axs[0,0].set_title(r'Relative error $\hat{\rho}_F/\rho_F-1$', fontsize=titlesize)
+axs[1,0].set_title(r'Bound penalties $\mathcal{L}_b$', fontsize=titlesize)
 
-axs[1,1].set_title(r'Uncertainties of these penalties $\Delta \mathcal{L}_b$')
+axs[1,1].set_title(r'Penalties´ uncertainties $\Delta \mathcal{L}_b$', fontsize=titlesize)
 
 
-fig.savefig('estimates_over_ground_truth.png', dpi=300, format='PNG',bbox_inches = "tight")
+fig.savefig('estimates_over_ground_truth.eps', format='eps',bbox_inches = "tight")

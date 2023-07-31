@@ -141,13 +141,13 @@ def save_1d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
 
     if after_training:
         title_text = "Model: {} - Activation: {}".format(config.model.name, config.model.activation)
-        save_path = os.path.join(figures_dir, "visualize_1d_best_model.png")
+        save_path = os.path.join(figures_dir, "visualize_1d_best_model.eps")
     else:
         title_text = "Model: {} - Activation: {}\nEpoch: {} - Loss: {}".format(config.model.name,
                                                                                config.model.activation,
                                                                                epoch,
                                                                                loss)
-        save_path = os.path.join(figures_dir, "epoch_{}_visualize_1d_".format(epoch))
+        save_path = os.path.join(figures_dir, "epoch_{}_visualize_1d_.eps".format(epoch))
 
     #plt.title(title_text, x=0.5, y=1.0)
     plt.tight_layout()
@@ -158,6 +158,6 @@ def save_1d_dualnet_visualizations(model, figures_dir, config, epoch=None, loss=
     matplotlib.rc('axes', titlesize=SMALL_SIZE)
     matplotlib.rc('ytick', labelsize=SMALL_SIZE)
     matplotlib.rc('legend', fontsize=10) 
-    plt.savefig(save_path, dpi=300)
+    plt.savefig(save_path, format='EPS')
     # plt.show(block=True)
     plt.close('all')

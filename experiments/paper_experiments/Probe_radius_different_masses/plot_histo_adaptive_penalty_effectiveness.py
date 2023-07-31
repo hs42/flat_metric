@@ -27,6 +27,12 @@ data_points_to_consider = 50
 
 
 def load_data(path_with, path_without, dim_by_user):
+    dirs = os.listdir(path_with)
+    number_of_dirs = int(len(dirs))
+    
+    distance_estimates = np.zeros((number_of_dirs, 2, 2)) #dir_idx,[mean, std]
+    relative_errors = np.zeros((number_of_dirs, 2, 2))    #dir_idx,[mean, std]
+    actual_penalties = np.zeros((number_of_dirs, 2, 2))   #dir_idx,[mean, std]
     for k, path in enumerate([path_with, path_without]):
 
         dirs = os.listdir(path)
@@ -35,11 +41,6 @@ def load_data(path_with, path_without, dim_by_user):
         r_values = np.zeros(number_of_dirs)
         m_values = np.zeros(number_of_dirs, dtype=int)
         n_values = np.zeros(number_of_dirs, dtype=int)
-
-
-        distance_estimates = np.zeros((number_of_dirs, 2, 2)) #dir_idx,[mean, std]
-        relative_errors = np.zeros((number_of_dirs, 2, 2))    #dir_idx,[mean, std]
-        actual_penalties = np.zeros((number_of_dirs, 2, 2))   #dir_idx,[mean, std]
 
         print('Loading data {x} adaptive penalty...'.format(x=['with', 'without'][k]))
 
@@ -89,4 +90,5 @@ def plot(relative_errors):
     ax[0].set_title('With adaptive penalty')
     ax[1].hist(relative_errors[:,0,1], bins=20)
     ax[1].set_title('Without adaptive penalty')
-    fig.savefig
+    fig.savefig('Fig5_histo.eps', format='EPS')
+    

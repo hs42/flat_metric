@@ -16,7 +16,7 @@ import tkinter as tk
 from tkinter.filedialog import askdirectory
 import shutil
 
-__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir)
+__basedir__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir, os.pardir)
 __filedir__ = os.path.dirname(os.path.abspath(__file__))
 
 '''
@@ -82,7 +82,7 @@ Set/Initialize parameters
 """
 
 m = int(sample_size_factor*10) #chosen somewhat arbitrarily
-n = int(sample_size_factor*50) #chosen somewhat arbitrarily
+n = int(sample_size_factor*10) #chosen somewhat arbitrarily
 
 data['distrib1']['dim'] = dim 
 data['distrib2']['dim'] = dim
@@ -94,68 +94,26 @@ data['distrib2']['test_sample_size'] = max(1,int(0.1*n))
 
 data['cuda'] = use_cuda
 
-linear_layer_type = 'spectral_normal'
-layers = [] #the hidden layers. List of number of respective neurons
-activation = 'group_sort'
-groupings = [] #the number of neurons in each hidden layer used for calculating the GroupSort activation function. 
-#E.g. groupings = [2, 4] would mean that in the first layer groups of two neurons each will be formed, and the neurons in each one will be compared and sorted,
-#whereas it would be groups of 4 neurons for the second hidden layer.  
+lr_to_test = [0.1, 0.01, 0.001, 0.0001] #learning rates to test
 
 """
 #enter loop: modify architecutral parameters in each one. For each run, sweep through different values for the radius to observe which effects the hyperparameters have
 """
-for i in range(6):
-
-    if i == 0:
-        #this is the default (=control) case
-        linear_layer_type = 'spectral_normal'
-        layers = [128, 128, 1]
-        groupings = [2, 2, 1]
-    elif i == 1:
-        #compare to Björck orthonormalization
-        linear_layer_type = 'bjorck'
-        layers = [128, 128, 1]
-        groupings = [2, 2, 1]
-    elif i == 2:
-        #make net deeper, add more training time
-        linear_layer_type = 'spectral_normal'
-        layers = [128, 128, 128, 128, 128, 1]
-        groupings = [2, 2, 2, 2, 2, 1]
-    elif i == 3:
-        #make layers bigger
-        linear_layer_type = 'spectral_normal'
-        layers = [512, 512, 1]
-        groupings = [8, 8, 1]
-    elif i == 4:
-        #make net deeper, add more training time, switch to Bjorck
-        linear_layer_type = 'bjorck'
-        layers = [128, 128, 128, 128, 128, 1]
-        groupings = [2, 2, 2, 2, 2, 1]
-    elif i == 5:
-        #make layers bigger, switch to Bjorck
-        linear_layer_type = 'bjorck'
-        layers = [512, 512, 1]
-        groupings = [8, 8, 1]
+for lr in lr_to_test:
 
 
-    data['model']['linear']['type'] = linear_layer_type
-    data['model']['layers'] = layers
-    data['model']['groupings'] = groupings
-    data['model']['activation'] = activation
+    data['optim']['lr_schedule']['lr_init'] = lr
+    
+    data['output_root'] = out_path
 
+    data['distrib2']['radius'] = 5.0
 
-    out_path2 = os.path.join(out_path, 'study_case_'+str(i))
-    data['output_root'] = out_path2
+    #write new config file
+    with open(config_To_be_written, "w") as write_file:
+        json.dump(data, write_file, indent=4)
 
-    for r in radii_to_test:
-        data['distrib2']['radius'] = r
-
-        #write new config file
-        with open(config_To_be_written, "w") as write_file:
-            json.dump(data, write_file, indent=4)
-
-        #compute flat metric
-        subprocess.call("python " + os.path.join(__basedir__, "lnets", "tasks", "dualnets", "mains","train_dual.py") + " " + config_To_be_written, shell=True)
+    #compute flat metric
+    subprocess.call("python " + os.path.join(__basedir__, "lnets", "tasks", "dualnets", "mains","train_dual.py") + " " + config_To_be_written, shell=True)
 
 #clean up
 tempdir.cleanup()

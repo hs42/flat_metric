@@ -23,6 +23,7 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         self.l_fraction = config.l_fraction
         self.m = size
         self.r_i = np.zeros(self.l)
+        self.generated_samples = False
 
         assert self.dim > 0, "Dimensionality must be larger than 0. " 
 
@@ -34,7 +35,6 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
 
         if size != self.m:
             raise RuntimeError('The given sample size does not equal the sample size with which this instance was initialized. This will yield errors in the ground truth computation')
-        #print("In call fct der Distrb: ",  size - self.l)
         self.r_i = np.random.uniform(0.0, 2.0, self.l)
         r_i_outside = np.random.uniform(2.0, 200.0, size - self.l)
 
@@ -51,6 +51,8 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         samples = np.concatenate((samples_within, samples_without))
         np.random.shuffle(samples)
 
+        self.generated_samples = True
+
         return samples
 
     def get_groundtruth(self, size_other_distr):
@@ -66,7 +68,7 @@ class Sum_of_Diracs_with_different_radii(BaseDistrib):
         term3 = self.m - self.l
 
 
-        if term1 == 0:
+        if not self.generated_samples:
             #When the radii are not yet set because the __call__ method wasnt called yet, cant compute the ground truth
             raise RuntimeError('Wanted to compute the ground truth before the necessary data points were sampled.')
         

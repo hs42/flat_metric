@@ -1,5 +1,5 @@
 # About
-This code implements the computation of the flat distance between two distributions. Paper link: ToDo
+This code implements the computation of the flat distance between two distributions. The corresponding paper can be found at https://doi.org/10.1007/s10994-025-06828-8
 
 # Installation
 * Create a new conda environment and activate it:
